@@ -13,9 +13,10 @@ Every time you run a command, edit a file, or just sit there idle, a fresh insul
 - **Tool-triggered roasts** — `bash`, `write`, `edit` always roast; `read` roasts 30% of the time
 - **Idle roasts** — random insults every 45–120 seconds while you're not doing anything
 - **Footer status bar** — insults linger in the footer until replaced by the next one
-- **`/roast` command** — toggle roasting on/off
+- **`/roast` command** — toggle roasting on/off, with state persisted across sessions
 - **`/roast-me` command** — on-demand insult (works even when muted!)
-- **Zero dependencies** — single TypeScript file, no npm packages needed
+- **Configurable behavior** — roast timing and probabilities can be adjusted via `pi-roast` settings
+- **Minimal dependency design** — single TypeScript entry point plus `insults.json`, no npm packages needed
 
 ## Installation
 
@@ -68,9 +69,11 @@ The extension detects specific patterns in your tool calls and serves targeted i
 | `rm -rf` | "rm -rf? I hope you meant that." |
 | `sudo` | "sudo: because normal permissions are for normal code." |
 | `git push --force` | "Force push? Bold move. Your teammates will love that." |
+| `git commit` | "I hope that commit message is more than just 'fix'." |
 | `npm install` | "Another dependency. Your node_modules is already a small country." |
 | `.env` files | "Touching .env? What could possibly go wrong." |
 | `package.json` | "Touching package.json? This ends with npm install, doesn't it." |
+| `.yaml` / `.yml` files | "YAML: yet another massive headache. Good luck with the indentation." |
 | `temp`/`tmp`/`hack`/`wip` files | "That file name is already an apology." |
 | `README` | "Reading the README? First time?" |
 | Test files | "A test file! Proof that miracles still happen." |
@@ -102,13 +105,14 @@ Error 404: competence not found.
 
 ## Customization
 
-Edit `pi-roast.ts` directly:
+Edit `insults.json` or `pi-roast.ts`:
 
-- **Add/remove insults** — edit the `INSULTS`, `FAILURE_INSULTS`, or `CONTEXT_INSULTS` arrays
-- **Change idle timing** — modify `IDLE_MIN_MS` and `IDLE_MAX_MS` (default: 45s–120s)
-- **Change read roast chance** — modify `READ_INSULT_CHANCE` (default: `0.3`)
-- **Change failure roast chance** — modify `FAILURE_INSULT_CHANCE` (default: `0.5`)
-- **Change status key** — modify `STATUS_KEY` (default: `"pi-roast"`)
+- **Add/remove insults** — edit `insults.json` under `general`, `failures`, or `contextual`
+- **Change idle timing** — modify `pi-roast.idleMinMs` and `pi-roast.idleMaxMs` (default: 45s–120s)
+- **Change read roast chance** — modify `pi-roast.readInsultChance` (default: `0.3`)
+- **Change failure roast chance** — modify `pi-roast.failureInsultChance` (default: `0.5`)
+- **Change unclassified tool roast chance** — modify `pi-roast.unclassifiedToolChance` (default: `0.15`)
+- **Change status key** — modify `STATUS_KEY` in `pi-roast.ts` (default: `"pi-roast"`)
 
 ## Implementation Details
 
