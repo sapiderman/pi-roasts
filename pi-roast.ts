@@ -251,7 +251,8 @@ export default function (pi: ExtensionAPI) {
     const delay = randomBetween(config.idleMinMs, config.idleMaxMs);
     idleTimer = setTimeout(() => {
       if (enabled && lastCtx) roast();
-      scheduleIdleRoast();
+      // Don't reschedule — pause roasting until next activity.
+      // turn_end / agent_end events will restart the cycle when the user is back.
     }, delay);
   }
 
