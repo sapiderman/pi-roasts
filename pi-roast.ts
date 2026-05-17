@@ -1,4 +1,4 @@
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import insultsData from "./insults.json";
 
 // ─── Type Validation ──────────────────────────────────────────────────────────
@@ -74,6 +74,13 @@ class ShuffleBag<T> {
     this.remaining = [];
   }
 
+  private shuffle(): void {
+    for (let i = this.remaining.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.remaining[i], this.remaining[j]] = [this.remaining[j], this.remaining[i]];
+    }
+  }
+
   next(): T {
     if (this.remaining.length === 0) {
       this.remaining = [...this.pool];
@@ -147,10 +154,22 @@ function getContextInsult(toolName: string, input: unknown, bags: Map<string, Sh
   return null;
 }
 
+// ─── Model-switch roasts ──────────────────────────────────────────────────────
+
+const MODEL_ROASTS = [
+  "Switching models? Running from your problems again.",
+  "New model, same mistakes.",
+  "Good luck with that one. It'll need it.",
+  "The model changed but your code didn't.",
+  "Maybe this one can fix what you broke.",
+  "Different model, same skill issues.",
+  "A new model won't save you from yourself.",
+];
+
 // ─── Constants & Settings ───────────────────────────────────────────────────────
 
-const STATUS_KEY = "pi-roast";
-const ENABLED_STATE_KEY = "pi-roast-enabled";
+const WIDGET_KEY = "pi-roast";
+const ENABLED_CUSTOM_TYPE = "pi-roast-enabled";
 
 const DEFAULT_CONFIG: RoastConfig = {
   idleMinMs: 45_000,
@@ -169,14 +188,13 @@ export default function (pi: ExtensionAPI) {
   const failureBag = new ShuffleBag(insults.failures);
 
   let idleTimer: ReturnType<typeof setTimeout> | null = null;
-  let lastCtx: ExtensionContext | null = null;
+  let lastCtx: any = null;
   let enabled = true;
 
   // ── Helpers ──
 
   function getConfig(): RoastConfig {
-    const cfg = pi.config.get<Partial<RoastConfig>>("pi-roast") ?? {};
-    return { ...DEFAULT_CONFIG, ...cfg };
+    return DEFAULT_CONFIG;
   }
 
   function getConfigSets(): { high: Set<string>; low: Set<string> } {
@@ -187,30 +205,42 @@ export default function (pi: ExtensionAPI) {
     };
   }
 
-  async function loadEnabledState(ctx: ExtensionContext): Promise<void> {
-    enabled = ctx.globalState.get<boolean>(ENABLED_STATE_KEY) ?? true;
+  async function loadEnabledState(ctx: any): Promise<void> {
+    enabled = true;
+    const entries = ctx.sessionManager.getBranch();
+    // Walk in reverse to find the most recent enabled state
+    for (let i = entries.length - 1; i >= 0; i--) {
+      const entry = entries[i];
+      if (entry.type === "custom" && entry.customType === ENABLED_CUSTOM_TYPE) {
+        enabled = entry.data?.enabled ?? true;
+        return;
+      }
+    }
   }
 
-  async function saveEnabledState(ctx: ExtensionContext): Promise<void> {
-    await ctx.globalState.update(ENABLED_STATE_KEY, enabled);
+  async function saveEnabledState(): Promise<void> {
+    pi.appendEntry(ENABLED_CUSTOM_TYPE, { enabled });
   }
 
   // ── Core roast functions ──
 
   function roast(insult?: string): void {
     if (!lastCtx) return;
-    lastCtx.ui.setStatus(STATUS_KEY, insult ?? bag.next());
-  }
-
-  function roastIfEnabled(insult?: string): void {
-    if (!enabled) return;
-    roast(insult);
+    const text = "🔥 " + (insult ?? bag.next());
+    lastCtx.ui.setWidget(WIDGET_KEY, [text]);
   }
 
   function roastAndResetIdle(insult?: string): void {
     if (!enabled) return;
     roast(insult);
-    scheduleIdleRoast();
+    // Don't schedule idle here — the agent is actively working.
+    // Idle roast resumes on turn_end.
+  }
+
+  function clearStatus(): void {
+    if (lastCtx) {
+      lastCtx.ui.setWidget(WIDGET_KEY, undefined);
+    }
   }
 
   // ── Idle timer ──
@@ -220,7 +250,7 @@ export default function (pi: ExtensionAPI) {
     const config = getConfig();
     const delay = randomBetween(config.idleMinMs, config.idleMaxMs);
     idleTimer = setTimeout(() => {
-      if (enabled) roast();
+      if (enabled && lastCtx) roast();
       scheduleIdleRoast();
     }, delay);
   }
@@ -232,12 +262,6 @@ export default function (pi: ExtensionAPI) {
     }
   }
 
-  function clearStatus(): void {
-    if (lastCtx) {
-      lastCtx.ui.setStatus(STATUS_KEY, "");
-    }
-  }
-
   // ── Commands ──
 
   pi.registerCommand("roast", {
@@ -245,11 +269,11 @@ export default function (pi: ExtensionAPI) {
     handler: async (_args, ctx) => {
       lastCtx = ctx;
       enabled = !enabled;
-      await saveEnabledState(ctx);
+      await saveEnabledState();
 
       if (enabled) {
         ctx.ui.notify("🔥 pi-roast activated", "info");
-        roast();
+        ctx.ui.setWidget(WIDGET_KEY, ["🔥 " + bag.next()]);
         scheduleIdleRoast();
       } else {
         ctx.ui.notify("🔇 pi-roast muted", "info");
@@ -263,7 +287,7 @@ export default function (pi: ExtensionAPI) {
     description: "Get roasted on demand (works even when muted)",
     handler: async (_args, ctx) => {
       lastCtx = ctx;
-      ctx.ui.setStatus(STATUS_KEY, bag.next());
+      ctx.ui.setWidget(WIDGET_KEY, ["🔥 " + bag.next()]);
     },
   });
 
@@ -275,10 +299,28 @@ export default function (pi: ExtensionAPI) {
 
     if (enabled) {
       ctx.ui.notify("🔥 pi-roast activated", "info");
-      roast();
+      ctx.ui.setWidget(WIDGET_KEY, ["🔥 " + bag.next()]);
       scheduleIdleRoast();
     }
   });
+
+  // ── Turn lifecycle: pause idle during active work, resume when idle ──
+
+  pi.on("turn_start", async () => {
+    stopIdleRoast();
+  });
+
+  pi.on("turn_end", async (_event, ctx) => {
+    lastCtx = ctx;
+    if (enabled) scheduleIdleRoast();
+  });
+
+  pi.on("agent_end", async (_event, ctx) => {
+    lastCtx = ctx;
+    if (enabled) scheduleIdleRoast();
+  });
+
+  // ── Tool events ──
 
   pi.on("tool_call", async (event: ToolCallEvent, ctx) => {
     lastCtx = ctx;
@@ -314,15 +356,27 @@ export default function (pi: ExtensionAPI) {
     }
   });
 
-  // Session switching — clean up
+  // ── Model events ──
+
+  pi.on("model_select", async (event, ctx) => {
+    lastCtx = ctx;
+    if (!enabled) return;
+
+    const insult = MODEL_ROASTS[Math.floor(Math.random() * MODEL_ROASTS.length)];
+    roastAndResetIdle(insult);
+  });
+
+  // ── Session lifecycle ──
+
   pi.on("session_before_switch", async () => {
     stopIdleRoast();
     clearStatus();
+    lastCtx = null;
   });
 
-  // Session ends — clean up
   pi.on("session_shutdown", async () => {
     stopIdleRoast();
     clearStatus();
+    lastCtx = null;
   });
 }
