@@ -12,11 +12,11 @@ Every time you run a command, edit a file, switch models, or just sit there idle
 - **Failure roasts** — when a tool fails, you get roasted harder (50% chance)
 - **Shuffle bag** — Fisher-Yates shuffle with draw-without-replacement and cross-cycle repeat prevention
 - **Tool-triggered roasts** — `bash`, `write`, `edit` always roast; `read` roasts 30% of the time
-- **Turn-aware idle roasts** — idle timer pauses during active agent turns, resumes when idle; random insults every 45–120 seconds of inactivity
-- **Footer status + widget** — insults appear in both the footer status bar and the widget area above the editor
+- **Idle timer pauses** — idle timer pauses during active agent turns, resumes when idle; random insults every 45–120 seconds of inactivity
+- **Widget display** — insults appear in the widget area above the editor
 - **`/roast` command** — toggle roasting on/off, state persisted within the session via `appendEntry`
 - **`/roast-me` command** — on-demand insult (works even when muted!)
-- **Minimal dependency design** — single TypeScript entry point plus `insults.json`, no npm packages needed
+- **Minimal dependency design** — single TypeScript entry point plus `insults.json` in the `extensions/` directory, no npm packages needed
 
 ## Installation
 
@@ -25,7 +25,7 @@ Every time you run a command, edit a file, switch models, or just sit there idle
 Copy the extension to pi's global extensions directory:
 
 ```bash
-cp pi-roast.ts ~/.pi/agent/extensions/pi-roast.ts
+cp extensions/pi-roast.ts ~/.pi/agent/extensions/pi-roast.ts
 ```
 
 Pi will auto-discover it on startup. Use `/reload` in pi to pick it up without restarting.
@@ -33,12 +33,12 @@ Pi will auto-discover it on startup. Use `/reload` in pi to pick it up without r
 ### Option 2: One-off test
 
 ```bash
-pi -e ./pi-roast.ts
+pi -e ./extensions/pi-roast.ts
 ```
 
 ### Option 3: Project-local
 
-Create `.pi/extensions/` in your project root and place `pi-roast.ts` there.
+Create `.pi/extensions/` in your project root and place `extensions/pi-roast.ts` there.
 
 ## Commands
 
@@ -141,7 +141,7 @@ Edit `insults.json` or `pi-roast.ts`:
 
 - **ShuffleBag** — Fisher-Yates shuffle with draw-without-replacement and cross-cycle repeat prevention
 - **Turn-aware idle** — idle timer pauses on `turn_start`, resumes on `turn_end`/`agent_end`; avoids roasts while the agent is actively working
-- **Dual display** — each roast is shown in both `setStatus()` (footer) and `setWidget()` (above editor) via themed text
+- **Widget display** — each roast is shown in the widget area above the editor via `setWidget()`
 - **Context-aware roasts** — pattern matching on `bash` commands and file paths; falls back to generic shuffle bag
 - **Failure detection** — checks `event.isError` and `event.result.isError` on tool results
 - **Model-switch roasts** — random selection from `MODEL_ROASTS` on `model_select`
@@ -155,6 +155,10 @@ rm ~/.pi/agent/extensions/pi-roast.ts
 ```
 
 Then `/reload` in pi or restart.
+
+## License
+
+MIT
 
 ## License
 

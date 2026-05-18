@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import insultsData from "./insults.json";
+import insultsData from "./insults.json" with { type: "json" };
 
 // ─── Type Validation ──────────────────────────────────────────────────────────
 
