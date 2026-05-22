@@ -42,7 +42,18 @@ interface RoastConfig {
   unclassifiedToolChance: number;
   highPriorityTools: string[];
   lowPriorityTools: string[];
+  /** Theme fg color name for roast text. Default: "accent" */
+  color: string;
 }
+
+/** Valid theme foreground color names. */
+const THEME_FG_COLORS = [
+  "text", "accent", "muted", "dim",
+  "success", "error", "warning",
+  "border", "borderAccent", "borderMuted",
+] as const;
+
+type ThemeFgColor = (typeof THEME_FG_COLORS)[number];
 
 interface ToolCallEvent {
   toolName: string;
@@ -164,6 +175,11 @@ const MODEL_ROASTS = [
   "Maybe this one can fix what you broke.",
   "Different model, same skill issues.",
   "A new model won't save you from yourself.",
+  "Opus called. They want their tokens back.",
+  "New model, same dev. Try harder.",
+  "No. No. Don't change models. Change developers!",
+  "What? You're calling ALL the models to help you.",
+  "New model? Have you tried baking instead of coding?",
 ];
 
 // ─── Constants & Settings ───────────────────────────────────────────────────────
@@ -179,6 +195,7 @@ const DEFAULT_CONFIG: RoastConfig = {
   unclassifiedToolChance: 0.15,
   highPriorityTools: ["bash", "write", "edit"],
   lowPriorityTools: ["read"],
+  color: "accent",
 };
 
 // ─── Extension ──────────────────────────────────────────────────────────────────
@@ -227,7 +244,11 @@ export default function (pi: ExtensionAPI) {
   function roast(insult?: string): void {
     if (!lastCtx) return;
     const text = "🔥 " + (insult ?? bag.next());
-    lastCtx.ui.setWidget(WIDGET_KEY, [text]);
+    const color = getConfig().color as ThemeFgColor;
+    lastCtx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
+      render: () => [theme.fg(color, text)],
+      invalidate: () => {},
+    }));
   }
 
   function roastAndResetIdle(insult?: string): void {
@@ -274,7 +295,12 @@ export default function (pi: ExtensionAPI) {
 
       if (enabled) {
         ctx.ui.notify("🔥 pi-roast activated", "info");
-        ctx.ui.setWidget(WIDGET_KEY, ["🔥 " + bag.next()]);
+        const text = "🔥 " + bag.next();
+        const color = getConfig().color as ThemeFgColor;
+        ctx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
+          render: () => [theme.fg(color, text)],
+          invalidate: () => {},
+        }));
         scheduleIdleRoast();
       } else {
         ctx.ui.notify("🔇 pi-roast muted", "info");
@@ -288,7 +314,29 @@ export default function (pi: ExtensionAPI) {
     description: "Get roasted on demand (works even when muted)",
     handler: async (_args, ctx) => {
       lastCtx = ctx;
-      ctx.ui.setWidget(WIDGET_KEY, ["🔥 " + bag.next()]);
+      const text = "🔥 " + bag.next();
+      const color = getConfig().color as ThemeFgColor;
+      ctx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
+        render: () => [theme.fg(color, text)],
+        invalidate: () => {},
+      }));
+    },
+  });
+
+  pi.registerCommand("roast-color", {
+    description: `Set roast text color. Options: ${THEME_FG_COLORS.join(", ")}`,
+    handler: async (args, ctx) => {
+      const color = args.trim().toLowerCase();
+      if (!THEME_FG_COLORS.includes(color as ThemeFgColor)) {
+        ctx.ui.notify(`Invalid color "${color}". Options: ${THEME_FG_COLORS.join(", ")}`, "error");
+        return;
+      }
+      DEFAULT_CONFIG.color = color;
+      ctx.ui.notify(`🔥 Roast color set to ${color}`, "info");
+      // Re-render current roast with new color
+      if (enabled && lastCtx) {
+        roast();
+      }
     },
   });
 
@@ -300,7 +348,12 @@ export default function (pi: ExtensionAPI) {
 
     if (enabled) {
       ctx.ui.notify("🔥 pi-roast activated", "info");
-      ctx.ui.setWidget(WIDGET_KEY, ["🔥 " + bag.next()]);
+      const text = "🔥 " + bag.next();
+      const color = getConfig().color as ThemeFgColor;
+      ctx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
+        render: () => [theme.fg(color, text)],
+        invalidate: () => {},
+      }));
       scheduleIdleRoast();
     }
   });

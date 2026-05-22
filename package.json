@@ -2,11 +2,29 @@
   "name": "pi-roasts",
   "version": "1.0.0",
   "description": "A pi extension that roasts you while you code.",
-  "keywords": ["pi-package", "pi", "roasts"],
+  "keywords": [
+    "pi-package",
+    "pi",
+    "roasts",
+    "pi-extension"
+  ],
+  "author": "sapiderman.lumpat <sapiderman.lumpat@example.com>",
+  "license": "MIT",
+  "main": "./extensions/pi-roast.ts",
+  "files": [
+    "extensions/"
+  ],
+   "repository": {
+     "type": "git",
+     "url": "https://github.com/sapiderman/pi-roasts"
+   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
   "pi": {
-    "extensions": ["./extensions"]
+    "extensions": [
+      "./extensions"
+    ],
+    "image": "https://raw.githubusercontent.com/sapiderman/pi-roasts/main/assets/screenshot.png"
   }
 }
