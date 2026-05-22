@@ -1,7 +1,7 @@
 {
   "name": "pi-roasts",
   "version": "1.0.0",
-  "description": "A pi extension that roasts you with contextual insults when you make mistakes",
+  "description": "A pi extension that roasts you while you code.",
   "keywords": ["pi-package", "pi", "roasts"],
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"

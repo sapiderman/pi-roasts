@@ -43,14 +43,14 @@ Create `.pi/extensions/` in your project root and place `extensions/pi-roast.ts`
 ## Commands
 
 | Command | Description |
-|---------|-------------|
+| --------- | ------------- |
 | `/roast` | Toggle pi-roast on/off |
 | `/roast-me` | Get roasted on demand (works even when muted!) |
 
 ## How It Works
 
 | Trigger | Behavior |
-|---------|----------|
+| --------- | ---------- |
 | **Session starts** | Notification: "🔥 pi-roast activated" + first insult in footer & widget |
 | **`bash` / `write` / `edit`** | 100% chance of a roast; context-aware insult if pattern matches |
 | **`read`** | 30% chance of a roast |
@@ -67,7 +67,7 @@ Create `.pi/extensions/` in your project root and place `extensions/pi-roast.ts`
 The extension detects specific patterns in your tool calls and serves targeted insults:
 
 | Pattern | Example Insult |
-|---------|---------------|
+| --------- | --------------- |  
 | `rm -rf` | "rm -rf? I hope you meant that." |
 | `sudo` | "sudo: because normal permissions are for normal code." |
 | `git push --force` | "Force push? Bold move. Your teammates will love that." |
@@ -155,10 +155,6 @@ rm ~/.pi/agent/extensions/pi-roast.ts
 ```
 
 Then `/reload` in pi or restart.
-
-## License
-
-MIT
 
 ## License
 
