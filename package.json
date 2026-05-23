@@ -14,10 +14,10 @@
   "files": [
     "extensions/"
   ],
-   "repository": {
-     "type": "git",
-     "url": "https://github.com/sapiderman/pi-roasts"
-   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sapiderman/pi-roasts.git"
+  },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
