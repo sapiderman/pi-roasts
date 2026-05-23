@@ -2,7 +2,7 @@
 
 A [pi](https://github.com/earendil-works/pi-coding-agent) extension that roasts you while you code.
 
-Every time you run a command, edit a file, switch models, or just sit there idle twiddling your thumbs waiting for 5 o'clock, get a fresh roast in your widget area to keep you grounded.  
+Every time you run a command, edit a file, switch models, or just sitting there waiting for 5 o'clock to come around, get a fresh roast in your widget area.
 
 ## Features
 
