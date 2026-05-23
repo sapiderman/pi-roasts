@@ -132,7 +132,7 @@ function getContextInsult(toolName: string, input: unknown, bags: Map<string, Sh
   // Bash / Git command patterns
   if (toolName === "bash" && command) {
     if (/\brm\s+-rf\b/.test(command)) return bags.get("rm_rf")?.next() ?? null;
-    if (/git\s+push\s+--(-force|f)\b/.test(command)) return bags.get("force_push")?.next() ?? null;
+    if (/git\s+push\s+(-f\b|--force\b|--f\b)/.test(command)) return bags.get("force_push")?.next() ?? null;
     if (/git\s+commit\b/.test(command)) return bags.get("git_commit")?.next() ?? null;
     if (/\bsudo\b/.test(command)) return bags.get("sudo")?.next() ?? null;
     if (/\b(npm\s+install|yarn\s+add|pnpm\s+add)\b/.test(command)) return bags.get("npm_install")?.next() ?? null;

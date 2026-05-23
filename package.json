@@ -1,6 +1,6 @@
 {
   "name": "pi-roasts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A pi extension that roasts you while you code.",
   "keywords": [
     "pi-package",
