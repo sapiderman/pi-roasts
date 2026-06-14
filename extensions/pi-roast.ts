@@ -186,7 +186,7 @@ function getContextInsult(toolName: string, input: unknown, bags: Map<string, Sh
 
 // ─── Model-switch roasts ──────────────────────────────────────────────────────
 
-const MODEL_ROASTS = [
+const modelRoastBag = new ShuffleBag([
   "Switching models? Running from your problems again.",
   "New model, same mistakes.",
   "Good luck with that one. It'll need it.",
@@ -199,7 +199,7 @@ const MODEL_ROASTS = [
   "No. No. Don't change models. Change developers!",
   "What? You're calling ALL the models to help you.",
   "New model? Have you tried baking instead of coding?",
-];
+]);
 
 // ─── Constants & Settings ───────────────────────────────────────────────────────
 
@@ -217,6 +217,10 @@ const DEFAULT_CONFIG: RoastConfig = {
   color: "accent",
 };
 
+// Built once from DEFAULT_CONFIG — no per-call allocation in the hot path
+const HIGH_PRIORITY_TOOLS = new Set(DEFAULT_CONFIG.highPriorityTools);
+const LOW_PRIORITY_TOOLS = new Set(DEFAULT_CONFIG.lowPriorityTools);
+
 // ─── Extension ──────────────────────────────────────────────────────────────────
 
 export default function (pi: ExtensionAPI) {
@@ -228,18 +232,6 @@ export default function (pi: ExtensionAPI) {
   let enabled = true;
 
   // ── Helpers ──
-
-  function getConfig(): RoastConfig {
-    return DEFAULT_CONFIG;
-  }
-
-  function getConfigSets(): { high: Set<string>; low: Set<string> } {
-    const cfg = getConfig();
-    return {
-      high: new Set(cfg.highPriorityTools),
-      low: new Set(cfg.lowPriorityTools),
-    };
-  }
 
   async function loadEnabledState(ctx: any): Promise<void> {
     enabled = true;
@@ -263,14 +255,14 @@ export default function (pi: ExtensionAPI) {
   function roast(insult?: string): void {
     if (!lastCtx) return;
     const text = "🔥 " + (insult ?? bag.next());
-    const color = getConfig().color as ThemeFgColor;
+    const color = DEFAULT_CONFIG.color as ThemeFgColor;
     lastCtx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
       render: () => [theme.fg(color, text)],
       invalidate: () => {},
     }));
   }
 
-  function roastAndResetIdle(insult?: string): void {
+  function roastIfEnabled(insult?: string): void {
     if (!enabled) return;
     roast(insult);
     // Don't schedule idle here — the agent is actively working.
@@ -287,8 +279,7 @@ export default function (pi: ExtensionAPI) {
 
   function scheduleIdleRoast(): void {
     stopIdleRoast();
-    const config = getConfig();
-    const delay = randomBetween(config.idleMinMs, config.idleMaxMs);
+    const delay = randomBetween(DEFAULT_CONFIG.idleMinMs, DEFAULT_CONFIG.idleMaxMs);
     idleTimer = setTimeout(() => {
       if (enabled && lastCtx) roast();
       // Don't reschedule — pause roasting until next activity.
@@ -314,12 +305,7 @@ export default function (pi: ExtensionAPI) {
 
       if (enabled) {
         ctx.ui.notify("🔥 pi-roast activated", "info");
-        const text = "🔥 " + bag.next();
-        const color = getConfig().color as ThemeFgColor;
-        ctx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
-          render: () => [theme.fg(color, text)],
-          invalidate: () => {},
-        }));
+        roast();
         scheduleIdleRoast();
       } else {
         ctx.ui.notify("🔇 pi-roast muted", "info");
@@ -333,12 +319,7 @@ export default function (pi: ExtensionAPI) {
     description: "Get roasted on demand (works even when muted)",
     handler: async (_args, ctx) => {
       lastCtx = ctx;
-      const text = "🔥 " + bag.next();
-      const color = getConfig().color as ThemeFgColor;
-      ctx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
-        render: () => [theme.fg(color, text)],
-        invalidate: () => {},
-      }));
+      roast();
     },
   });
 
@@ -367,12 +348,7 @@ export default function (pi: ExtensionAPI) {
 
     if (enabled) {
       ctx.ui.notify("🔥 pi-roast activated", "info");
-      const text = "🔥 " + bag.next();
-      const color = getConfig().color as ThemeFgColor;
-      ctx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
-        render: () => [theme.fg(color, text)],
-        invalidate: () => {},
-      }));
+      roast();
       scheduleIdleRoast();
     }
   });
@@ -399,20 +375,18 @@ export default function (pi: ExtensionAPI) {
     lastCtx = ctx;
     if (!enabled) return;
 
-    const config = getConfig();
-    const { high, low } = getConfigSets();
     const contextInsult = getContextInsult(event.toolName, event.input, contextualBags);
 
-    if (high.has(event.toolName)) {
-      roastAndResetIdle(contextInsult ?? undefined);
-    } else if (low.has(event.toolName)) {
-      if (Math.random() < config.readInsultChance) {
-        roastAndResetIdle(contextInsult ?? undefined);
+    if (HIGH_PRIORITY_TOOLS.has(event.toolName)) {
+      roastIfEnabled(contextInsult ?? undefined);
+    } else if (LOW_PRIORITY_TOOLS.has(event.toolName)) {
+      if (Math.random() < DEFAULT_CONFIG.readInsultChance) {
+        roastIfEnabled(contextInsult ?? undefined);
       }
     } else {
       // Unclassified tools get a small chance to roast
-      if (Math.random() < config.unclassifiedToolChance) {
-        roastAndResetIdle(contextInsult ?? undefined);
+      if (Math.random() < DEFAULT_CONFIG.unclassifiedToolChance) {
+        roastIfEnabled(contextInsult ?? undefined);
       }
     }
   });
@@ -421,11 +395,10 @@ export default function (pi: ExtensionAPI) {
     lastCtx = ctx;
     if (!enabled) return;
 
-    const config = getConfig();
     const isError = Boolean(event.isError ?? event.result?.isError);
 
-    if (isError && Math.random() < config.failureInsultChance) {
-      roastAndResetIdle(failureBag.next());
+    if (isError && Math.random() < DEFAULT_CONFIG.failureInsultChance) {
+      roastIfEnabled(failureBag.next());
     }
   });
 
@@ -435,8 +408,7 @@ export default function (pi: ExtensionAPI) {
     lastCtx = ctx;
     if (!enabled) return;
 
-    const insult = MODEL_ROASTS[Math.floor(Math.random() * MODEL_ROASTS.length)];
-    roastAndResetIdle(insult);
+    roastIfEnabled(modelRoastBag.next());
   });
 
   // ── Session lifecycle ──

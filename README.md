@@ -166,7 +166,7 @@ Edit `insults.json` or `pi-roast.ts`:
 - **Change read roast chance** — edit `readInsultChance` in `DEFAULT_CONFIG` (default: `0.3`)
 - **Change failure roast chance** — edit `failureInsultChance` in `DEFAULT_CONFIG` (default: `0.5`)
 - **Change unclassified tool roast chance** — edit `unclassifiedToolChance` in `DEFAULT_CONFIG` (default: `0.15`)
-- **Add model-switch roasts** — add entries to the `MODEL_ROASTS` array in `pi-roast.ts`
+- **Add model-switch roasts** — add entries to the `modelRoastBag` ShuffleBag initializer in `pi-roast.ts`
 - **Change roast color** — use `/roast-color <name>` at runtime, or edit `color` in `DEFAULT_CONFIG`
 
 ## Implementation Details
@@ -176,7 +176,7 @@ Edit `insults.json` or `pi-roast.ts`:
 - **Widget display** — each roast is shown in the widget area above the editor via `setWidget()`
 - **Context-aware roasts** — pattern matching on `bash` commands and file paths; also detects commits via GitHub/Git wrapper tools; falls back to generic shuffle bag
 - **Failure detection** — checks `event.isError` and `event.result.isError` on tool results
-- **Model-switch roasts** — random selection from `MODEL_ROASTS` on `model_select`
+- **Model-switch roasts** — drawn from `modelRoastBag` (ShuffleBag, no-repeat) on `model_select`
 - **Session persistence** — enabled state saved via `pi.appendEntry()` and restored from `sessionManager.getBranch()` on session start
 - **Context lifecycle** — `lastCtx` invalidated on `session_before_switch` and `session_shutdown` to prevent stale references; idle timer guard checks `lastCtx` before firing
 - **Theme color validation** — `/roast-color` validates against the known `ThemeFgColor` union at runtime
