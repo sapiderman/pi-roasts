@@ -138,13 +138,29 @@ function getContextInsult(toolName: string, input: unknown, bags: Map<string, Sh
     if (/\b(npm\s+install|yarn\s+add|pnpm\s+add)\b/.test(command)) return bags.get("npm_install")?.next() ?? null;
     if (/\bcurl\b/.test(command)) return bags.get("curl")?.next() ?? null;
     if (/\bchmod\b/.test(command)) return bags.get("chmod")?.next() ?? null;
+    if (/\bdocker-compose\b/.test(command)) return bags.get("docker_compose")?.next() ?? null;
     if (/\bdocker\b/.test(command)) return bags.get("docker")?.next() ?? null;
     if (/\bkill\b/.test(command)) return bags.get("kill")?.next() ?? null;
+    if (/\bssh\b/.test(command)) return bags.get("ssh")?.next() ?? null;
+    if (/\baws\b/.test(command)) return bags.get("aws")?.next() ?? null;
+    if (/\b(kubectl|helm)\b/.test(command)) return bags.get("kubernetes")?.next() ?? null;
+    if (/\bcrontab\b/.test(command)) return bags.get("cron")?.next() ?? null;
+    if (/\bcargo\b/.test(command)) return bags.get("rust")?.next() ?? null;
+    if (/\bgo\s+(build|run|test|mod|get|generate)\b/.test(command)) return bags.get("go_lang")?.next() ?? null;
+    if (/\b(make|makefile)\b/i.test(command)) return bags.get("makefile")?.next() ?? null;
+    if (/\bgrep\b/.test(command)) return bags.get("grep")?.next() ?? null;
+    if (/\bpython[23]?\b/.test(command)) return bags.get("python")?.next() ?? null;
+    if (/\bpsql\b|\bmysql\b|\bsqlite3\b/.test(command)) return bags.get("sql")?.next() ?? null;
   }
 
   // Git commit via a wrapper tool — match exact tool names, not loose substring
   if (message && (toolName === "git" || toolName === "git_commit" || toolName === "github")) {
     return bags.get("git_commit")?.next() ?? null;
+  }
+
+  // AI assistant tool names — fire ai_assist roasts when the dev leans on AI for everything
+  if (/^(ask|prompt|ai_|llm_|gpt_|copilot|anthropic|gemini)/i.test(toolName)) {
+    return bags.get("ai_assist")?.next() ?? null;
   }
 
   // File path patterns
@@ -160,6 +176,9 @@ function getContextInsult(toolName: string, input: unknown, bags: Map<string, Sh
     if (/config/i.test(path) && !/node_modules/.test(path)) return bags.get("config")?.next() ?? null;
     if (/node_modules/.test(path)) return bags.get("node_modules")?.next() ?? null;
     if (/\.(test|spec)\./i.test(path)) return bags.get("test_file")?.next() ?? null;
+    if (/\.rs$/.test(path)) return bags.get("rust")?.next() ?? null;
+    if (/\.go$/.test(path)) return bags.get("go_lang")?.next() ?? null;
+    if (/\/(cron|crontab(\.d)?)\//i.test(path)) return bags.get("cron")?.next() ?? null;
   }
 
   return null;
