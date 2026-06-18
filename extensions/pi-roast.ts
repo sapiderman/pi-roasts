@@ -178,6 +178,7 @@ function getContextInsult(toolName: string, input: unknown, bags: Map<string, Sh
     if (/\.(test|spec)\./i.test(path)) return bags.get("test_file")?.next() ?? null;
     if (/\.rs$/.test(path)) return bags.get("rust")?.next() ?? null;
     if (/\.go$/.test(path)) return bags.get("go_lang")?.next() ?? null;
+    if (/\.(ts|tsx)$/.test(path)) return bags.get("typescript")?.next() ?? null;
     if (/\/(cron|crontab(\.d)?)\//i.test(path)) return bags.get("cron")?.next() ?? null;
   }
 
