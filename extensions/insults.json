@@ -128,7 +128,81 @@
     "Your branch strategy is 'push to main and hope.'",
     "You're one `!important` away from a CSS crime scene.",
     "That's not refactoring. That's rearranging deck chairs on the Titanic.",
-    "Your PR has more comments than lines of code. Let that sink in."
+    "Your PR has more comments than lines of code. Let that sink in.",
+    "You named a variable 'data2'. There's a 'data' right above it. Bold.",
+    "That class has seventeen responsibilities. It's not a class, it's a lifestyle.",
+    "Your function returns 'undefined' on the happy path. That's not happy.",
+    "The CI just failed again. The CI has feelings, you know.",
+    "You don't have a coding style. You have coding moods.",
+    "Your interface has one method. It's called 'doEverything'. Classic.",
+    "Look at all those magic numbers. Who needs constants anyway.",
+    "That object literal is 300 lines. JSON called, it wants a schema.",
+    "You broke the build and pushed anyway. Living legend.",
+    "Your 'quick fix' has a three-paragraph explanation. Nothing quick about it.",
+    "The function is named 'helper'. Helper of what? Of whom? At what cost?",
+    "You're importing the entire lodash library to call `_.get`. Once.",
+    "That promise chain is so long it needs a travel visa.",
+    "Semicolons in Python. You absolute anarchist.",
+    "Your naming convention is 'I'll remember this.' Narrator: They did not.",
+    "The code comment says 'do not touch' but here you are, touching.",
+    "You wrote an infinite loop and called it a 'background service.'",
+    "That condition is always true. Have you considered living in the light?",
+    "Your abstraction layer is thicker than your test suite.",
+    "You catch exceptions and then... just log them and move on. Bliss.",
+    "Another class called 'Manager'. The org chart is leaking into your code.",
+    "That boolean is named 'flag'. A flag for what? What are we signaling?",
+    "Your async function forgot to be awaited. It's out there, floating, alone.",
+    "The function has a default param that overrides itself. Beautiful chaos.",
+    "You checked in a file called 'FINAL_v2_REAL_THIS_TIME.js'. Respect.",
+    "Your commit is 47 files. That's not a commit, that's a novel.",
+    "That nested ternary operator has a nested ternary operator. Seek help.",
+    "You used a global variable to pass data between two functions. Bold architecture.",
+    "Your code style changes mid-file. Two devs. One body. Different keyboards.",
+    "That closure closed over so much state it needs a storage unit.",
+    "You have a file called 'utils.ts' that is 2,000 lines. That's not utils, that's universe.",
+    "The code compiles. That's honestly all I can say positively here.",
+    "Your conditional has seven else-ifs and no else. Living on the edge, I see.",
+    "That's a clever solution. Clever is the word I use when I mean 'unreadable.'",
+    "You used `setTimeout(fn, 0)` to 'fix' a race condition. Chef's kiss of denial.",
+    "This would be a great pull request if the rest of the code weren't watching.",
+    "Your pipeline has 14 stages. For a static site. Interesting life choices.",
+    "The function name starts with 'new' and ends with '2'. Perfect naming convention.",
+    "You deleted the tests because they were failing. Problem solved!",
+    "Your code is in a quantum state: simultaneously working and not working until observed.",
+    "That event listener is being added inside a loop. Good luck unsubscribing.",
+    "Your variable is named 'i' in a function that is 80 lines long. Brave.",
+    "That method is private because even the class is embarrassed by it.",
+    "You're mocking the database in tests and wondering why prod behaves differently. Mysterious.",
+    "Your singleton pattern is being instantiated twelve times. Bold reimagining of the concept.",
+    "The dead code in this file is load-bearing. Don't delete it.",
+    "You wrote a custom date-time parser. In 2025. Why.",
+    "Your boolean is named 'isNotInvalid'. There are two negatives and zero clarity.",
+    "That interface has one implementor and it's called 'Impl'. Architecture at its finest.",
+    "You're storing passwords as MD5. The year 2001 called; even it is disappointed.",
+    "Your function signature has eight parameters. Zero of them are objects. Incredible restraint.",
+    "You reached for setTimeout to solve a timing issue instead of fixing the timing issue.",
+    "That magic string appears seventeen times with zero constants. Chaos, but consistent chaos.",
+    "Your code has feature flags for features that shipped in 2022.",
+    "I see you chose chaos by not pinning your dependency versions.",
+    "That 'temporary' workaround has its own ticket, its own PR, and now its own legacy.",
+    "Your switch statement has no default case because you're sure you thought of everything.",
+    "The loop starts at 1. I hope that's intentional. I suspect it isn't.",
+    "You return early in some paths and throw in others with no discernible pattern. Vibes-based control flow.",
+    "That module imports itself. I'll give you a moment.",
+    "Your code is so DRY it's dehydrated. One abstraction to rule all context.",
+    "The comment says 'don't change this' and you changed it anyway. That's an origin story.",
+    "You refactored perfectly working code during a feature sprint. This is why we can't have nice things.",
+    "Your logs say 'starting process' and then silence. The process is not starting.",
+    "That object is being spread three times in a row. You're not merging, you're panicking.",
+    "You just introduced a circular dependency. Congratulations, you've broken physics.",
+    "The entire component re-renders every 100ms because you forgot to memoize. Somewhere a laptop fan weeps.",
+    "Your catch block just eats the error and returns null. You didn't fix the bug, you buried it.",
+    "That API response is being stored in localStorage. Every user is now their own database.",
+    "Your function is pure*. *Side effects apply.",
+    "You named the flag 'shouldNotSkip'. Now everyone reads it twice and still guesses.",
+    "The retry logic retries immediately, in a tight loop, with no backoff. Your server will love this.",
+    "You're reading the environment variable inside a hot path. Every call. Every time.",
+    "That index.ts exports 47 things. It's not a module, it's a mall."
   ],
   "failures": [
     "That command failed. Just like the last three.",
@@ -150,89 +224,260 @@
     "That error was so bad, the terminal is blushing.",
     "The command failed. Maybe try Stack Overflow. They miss you.",
     "Error 404: competence not found.",
-    "That failed so hard it's almost impressive."
+    "That failed so hard it's almost impressive.",
+    "Your error message has more personality than your code.",
+    "Non-zero exit code. Your code quit before you could.",
+    "The process died so you don't have to admit it was wrong. How noble.",
+    "That stack trace is a biography of your bad decisions.",
+    "Oh good, another segfault. Classic Tuesday.",
+    "The runtime threw an exception. The exception threw a party.",
+    "Failed with style. Still failed.",
+    "Three errors deep and you still look surprised.",
+    "Your code fell over. The logs are filing for therapy.",
+    "HTTP 500. Your server is as lost as you are.",
+    "The build failed. Somewhere, a senior dev just shuddered and doesn't know why.",
+    "Kernel panic? That's a fancy way to say 'you really messed up.'",
+    "Segmentation fault. You touched something you weren't supposed to.",
+    "Error: undefined is not a function. A classic. A timeless piece.",
+    "Your test failed in 3ms. It didn't even need to think about it.",
+    "The linter found 47 errors. It's not even trying anymore.",
+    "NullPointerException. The null knew what you were doing and refused to participate.",
+    "ENOENT: No such file or directory. Story of this project.",
+    "Dependency resolution failed. Even npm gave up on you today.",
+    "Out of memory. The machine gave you everything and you still wasted it.",
+    "Timeout. Even patience has limits, and yours expired before the request did.",
+    "Infinite loop detected. Your code finally found something it's good at.",
+    "Build failed on line 1. That's almost artistic.",
+    "Fatal error. Not the good kind of fatal.",
+    "The process ran out of stack space. Your recursion has recursion.",
+    "Certificate expired. Like your commitment to security.",
+    "Connection refused. The server took one look and said no.",
+    "Segfault on startup. You didn't even get a warm-up lap.",
+    "The test passed locally. The test did not pass anywhere else. Make it make sense.",
+    "Compilation succeeded. Runtime failed. You fixed the wrong problem.",
+    "Permission denied. Even the OS doesn't trust you.",
+    "Your script finished in 0.001 seconds. It also did nothing.",
+    "The build succeeded but the deploy failed. You love a cliffhanger.",
+    "Deadlock. Two threads walked into a bar and refused to let the other leave.",
+    "SIGKILL received. The OS lost patience before you did.",
+    "The migration rolled back. History is doomed to repeat itself, apparently.",
+    "Your health check returned 200 and yet nothing is healthy. Relatable.",
+    "Heap dump generated. It reads like a tragedy.",
+    "The test suite passed. In a different branch. Where none of this code exists."
   ],
   "contextual": {
     "rm_rf": [
       "rm -rf? I hope you meant that.",
       "rm -rf: the command that separates devs from ex-devs.",
-      "That rm -rf is a one-way ticket to rebuild city."
+      "That rm -rf is a one-way ticket to rebuild city.",
+      "rm -rf: the 'hold my beer' of Linux commands.",
+      "Nothing says confidence like deleting everything and starting over."
     ],
     "sudo": [
       "sudo: because normal permissions are for normal code.",
       "sudo make me a sandwich. Wait, wrong command.",
-      "Another sudo? What are you, the root of all problems?"
+      "Another sudo? What are you, the root of all problems?",
+      "sudo: the magic word that turns bad ideas into worse ideas, faster.",
+      "Ah, sudo. For when you want your mistakes to have administrator privileges."
     ],
     "force_push": [
       "Force push? Bold move. Your teammates will love that.",
       "git push --force: rewriting history since forever.",
       "Force pushing. The nuclear option of collaboration.",
       "Rewriting history? Even the timeline is rolling its eyes.",
-      "Force push: for when you're 100% sure you're wrong but want to be fast about it."
+      "Force push: for when you're 100% sure you're wrong but want to be fast about it.",
+      "Congratulations, you just became everyone's least favorite coworker. Again.",
+      "Force push: the 'it's not me, it's you' of version control."
     ],
     "npm_install": [
       "Another dependency. Your node_modules is already a small country.",
       "npm install: adding weight to a sinking ship.",
       "That dependency will outlive your project.",
-      "I see you're outsourcing your logic to a random 0.0.1 library."
+      "I see you're outsourcing your logic to a random 0.0.1 library.",
+      "Six transitive dependencies for a function that left-pads a string. Inspired.",
+      "npm install: the developer's way of saying 'someone else's problem.'",
+      "Your node_modules folder has more content than your actual project. Let that sink in."
     ],
     "curl": [
       "Curling that URL like you know what it returns.",
-      "curl and pray. The developer's creed."
+      "curl and pray. The developer's creed.",
+      "curl | bash. Security professionals weep softly in the background.",
+      "Piping curl directly into your shell. No notes. Maximum chaos."
     ],
     "chmod": [
       "chmod: when in doubt, make everything executable.",
-      "That chmod is giving me anxiety."
+      "That chmod is giving me anxiety.",
+      "chmod 777. Because why have security when you can have convenience.",
+      "chmod 777: the 'everyone can touch this' setting. Bold choice for a production server."
     ],
     "docker": [
       "Docker: because 'it works on my machine' wasn't enough.",
-      "Your Docker container has more layers than a wedding cake."
+      "Your Docker container has more layers than a wedding cake.",
+      "Docker: wrapping your bugs in a container so they're portable.",
+      "Your Dockerfile has no healthcheck. The container will just silently fail and you'll never know.",
+      "Running as root inside the container? The security team has entered the chat."
     ],
     "kill": [
       "kill: the developer's way of saying 'I give up.'",
-      "That kill signal is just you avoiding the real problem."
+      "That kill signal is just you avoiding the real problem.",
+      "kill -9: the 'stop talking' of process management.",
+      "kill -9 is not a graceful shutdown. Much like this codebase."
     ],
     "env_file": [
       "Touching .env? What could possibly go wrong.",
       "Editing .env. Bold move in production.",
-      "That .env file is one typo away from an incident report."
+      "That .env file is one typo away from an incident report.",
+      "Checking .env into git? The security team has blocked your calendar.",
+      "Production credentials in a .env file. You're living life one breach away."
     ],
     "package_json": [
       "Editing package.json. Here we go.",
       "Touching package.json? This ends with npm install, doesn't it.",
-      "package.json: the gift that keeps on giving. Dependencies."
+      "package.json: the gift that keeps on giving. Dependencies.",
+      "Pinning to a major version with ^. You love surprises.",
+      "package.json: one accidental keypress from breaking the entire team's builds."
     ],
     "temp_file": [
       "Editing a temp file. The filename says everything.",
       "temp, tmp, hack, wip — the four horsemen of bad filenames.",
-      "That file name is already an apology."
+      "That file name is already an apology.",
+      "A file called 'test2.js' in the root directory. Truly enterprise-grade.",
+      "That file screams 'I'll clean this up later.' The year is 2019."
     ],
     "readme": [
       "Reading the README? First time?",
-      "The README! A novel you've been avoiding."
+      "The README! A novel you've been avoiding.",
+      "The README said exactly what you needed. You still tried it the wrong way first, didn't you.",
+      "Reading the README after two hours of debugging. Classic."
     ],
     "config": [
       "Touching config files? Living dangerously.",
-      "Config changes: the gift that keeps on breaking."
+      "Config changes: the gift that keeps on breaking.",
+      "One wrong value in that config and production goes dark. Sleep well.",
+      "Editing config without a backup. The audacity. The recklessness. The vibe."
     ],
     "node_modules": [
       "You're reading node_modules. That's a cry for help.",
-      "node_modules: the folder that ate your disk space."
+      "node_modules: the folder that ate your disk space.",
+      "node_modules contains more code than the sum of human knowledge. You added to it today.",
+      "Browsing node_modules? At this point, just read the source of the universe."
     ],
     "test_file": [
       "Testing? How responsible of you. Didn't see that coming.",
       "A test file! Proof that miracles still happen.",
-      "Writing tests now? Did a bug hurt your feelings?"
+      "Writing tests now? Did a bug hurt your feelings?",
+      "Writing a test. Remarkable. Your future self sends their condolences.",
+      "A test! Framed and mounted. This day shall be remembered.",
+      "Your test is testing that true is true. Groundbreaking coverage."
     ],
     "yaml": [
       "YAML: yet another massive headache. Good luck with the indentation.",
       "One space off and the whole cloud goes down. Fun.",
-      "Indentation engineering. Truly the peak of our profession."
+      "Indentation engineering. Truly the peak of our profession.",
+      "YAML: the format that hates you and makes you prove it.",
+      "Tabs vs spaces in YAML is not an opinion, it's a war crime.",
+      "Your YAML is valid. Your soul is not."
     ],
     "git_commit": [
       "Committing already? That was fast. Or desperate.",
       "I hope that commit message is more than just 'fix'.",
-      "Staging your mistakes for the world to see. Brave."
+      "Staging your mistakes for the world to see. Brave.",
+      "'wip' is not a commit message. It's a confession.",
+      "Commit message: 'changes'. The git log reads like a ransom note.",
+      "Amending a commit for the third time. Just own your mistakes like everyone else.",
+      "Your commit history reads like the stages of grief."
+    ],
+    "grep": [
+      "Grepping for answers because reading your own code is too hard.",
+      "grep: because you lost track of where you put things. Again.",
+      "Searching your own codebase like a stranger in a strange land.",
+      "grep -r is not documentation. But I respect the hustle."
+    ],
+    "python": [
+      "Python: where indentation is load-bearing. You of all people should be careful.",
+      "pip install: adding another mystery to your virtual environment.",
+      "Your Python script starts with 'import everything'. Bold.",
+      "Global variables in Python. Because scope is a suggestion."
+    ],
+    "sql": [
+      "SELECT * in production. Your DBA is writing a strongly-worded email.",
+      "No WHERE clause. Bold. Catastrophic. Efficient, in a terrible way.",
+      "Raw SQL with string concatenation. The injection vector you built with your own hands.",
+      "That JOIN has a JOIN has a JOIN. Your query planner filed for retirement."
+    ],
+    "docker_compose": [
+      "docker-compose up: praying that all the services start in the right order.",
+      "Your docker-compose file has 11 services. For a to-do app.",
+      "volumes: ./everything:/everything. The bravest single line of YAML.",
+      "Docker Compose: because manually orchestrating chaos wasn't enough."
+    ],
+    "makefile": [
+      "A Makefile. Keeping the dream of 1977 alive.",
+      "Your Makefile has a target called 'magic'. I won't ask.",
+      "Tabs in Makefiles are mandatory. You knew this. You did it anyway.",
+      "The Makefile said PHONY but your targets are very real and very broken."
+    ],
+    "typescript": [
+      "TypeScript: so you can be wrong with more precision.",
+      "You cast to `any` and then back to the original type. Incredible journey.",
+      "Your TypeScript is just JavaScript with extra steps for decoration.",
+      "That `as unknown as YourType` cast is a war crime dressed as a type annotation.",
+      "// @ts-ignore: the developer's white flag.",
+      "Your generic has four type parameters and a constraint that violates itself.",
+      "You enabled strict mode but then spent an hour adding '!' everywhere. Democracy of denial."
+    ],
+    "ai_assist": [
+      "You asked the AI to write tests. For the AI-written code. We're in a recursion loop now.",
+      "Copy-pasting AI output you don't understand is just outsourcing your confusion.",
+      "The AI gave you five options and you picked the one it explicitly called 'not recommended.'",
+      "You asked the AI the same question four different ways hoping for a different answer. This is not how truth works.",
+      "Congratulations. You're now a prompt engineer. Your code is still wrong.",
+      "The AI told you what was wrong. You read it, nodded, and did the same thing again.",
+      "Your prompt was longer than your actual code. New definition of documentation."
+    ],
+    "ssh": [
+      "SSH into prod? Bold. Reckless. Inevitable.",
+      "You're editing production directly over SSH. The ops team is already composing an email.",
+      "ssh root@production. Three words that haunt every postmortem.",
+      "That SSH tunnel goes all the way through good judgment and out the other side.",
+      "You typed your password into the terminal instead of the password prompt. It's in the logs now."
+    ],
+    "cron": [
+      "That cron job runs at midnight. Production disagrees with midnight.",
+      "Your cron expression has six fields. The system only accepts five. It runs anyway. Somehow.",
+      "'* * * * *' — every minute, forever, without mercy.",
+      "You scheduled a cron job and forgot about it. It remembers you.",
+      "That cron job emails 10,000 users at 3am because nobody set a timezone."
+    ],
+    "aws": [
+      "Your AWS bill has more line items than your feature backlog.",
+      "You spun up a t2.micro for a data warehouse. Optimistic.",
+      "That IAM role has AdministratorAccess. Your security audit has AdministratorFear.",
+      "You left an S3 bucket public. The internet has been reading it all week.",
+      "Your Lambda cold starts are longer than your user's attention span.",
+      "EC2 instance running since 2019, no one knows what it does, no one is allowed to turn it off."
+    ],
+    "kubernetes": [
+      "Your pod is in CrashLoopBackOff and you're reading the logs like they'll apologize.",
+      "You gave your container 8GB memory limits and it requested 0. The scheduler is confused. Same.",
+      "Kubernetes: because running one Docker container wasn't complicated enough.",
+      "Your YAML has a YAML that has a YAML. It's turtles all the way down.",
+      "OOMKilled. The container ate itself. Consider a diet.",
+      "Your readiness probe passes and the service still doesn't work. Beautiful."
+    ],
+    "rust": [
+      "The borrow checker is not being mean to you. It's being honest.",
+      "Your Rust code has three .clone() calls in a hot loop. You've defeated the point.",
+      "You added unsafe and now you're just writing C with extra steps and more anxiety.",
+      "unwrap() is not error handling, it's an optimistic prayer.",
+      "You fought the borrow checker for two hours. The borrow checker won. It always wins."
+    ],
+    "go_lang": [
+      "if err != nil { log.Fatal(err) } is not a retry strategy.",
+      "Your goroutine leaks. Slowly. Quietly. Like a gas leak but for memory.",
+      "You're not handling the second return value. Enjoy your invisible errors.",
+      "That channel is unbuffered and you're sending from the main goroutine. Deadlock incoming.",
+      "You wrote a Go service and then spent three days fighting with GOPATH. The spirit of the language weeps."
     ]
   }
 }
