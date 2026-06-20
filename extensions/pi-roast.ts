@@ -1,5 +1,11 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import insultsData from "./insults.json" with { type: "json" };
+import { ShuffleBag } from "./shuffle-bag.js";
+import { MATCH_RULES } from "./context-matcher.js";
+import { createRoastEngine } from "./roast-engine.js";
+import { createWidget, type ThemeFgColor } from "./widget.js";
+import { createEnabledState } from "./enabled-state.js";
+import { createIdleScheduler } from "./idle-scheduler.js";
 
 // ─── Type Validation ──────────────────────────────────────────────────────────
 
@@ -32,19 +38,7 @@ function validateInsultsData(data: unknown): InsultsData {
 // Validate at load time — fail fast if the data file is malformed
 const insults = validateInsultsData(insultsData);
 
-// ─── Interfaces ──────────────────────────────────────────────────────────────
-
-interface RoastConfig {
-  idleMinMs: number;
-  idleMaxMs: number;
-  readInsultChance: number;
-  failureInsultChance: number;
-  unclassifiedToolChance: number;
-  highPriorityTools: string[];
-  lowPriorityTools: string[];
-  /** Theme fg color name for roast text. Default: "accent" */
-  color: string;
-}
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 /** Valid theme foreground color names. */
 const THEME_FG_COLORS = [
@@ -52,8 +46,6 @@ const THEME_FG_COLORS = [
   "success", "error", "warning",
   "border", "borderAccent", "borderMuted",
 ] as const;
-
-type ThemeFgColor = (typeof THEME_FG_COLORS)[number];
 
 interface ToolCallEvent {
   toolName: string;
@@ -67,127 +59,9 @@ interface ToolResultEvent {
   };
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function randomBetween(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// ─── ShuffleBag ─────────────────────────────────────────────────────────────────
-
-class ShuffleBag<T> {
-  private pool: T[];
-  private remaining: T[];
-  private lastDrawn: T | null = null;
-
-  constructor(items: T[]) {
-    this.pool = [...items];
-    this.remaining = [];
-  }
-
-  private shuffle(): void {
-    for (let i = this.remaining.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [this.remaining[i], this.remaining[j]] = [this.remaining[j], this.remaining[i]];
-    }
-  }
-
-  next(): T {
-    if (this.remaining.length === 0) {
-      this.remaining = [...this.pool];
-      this.shuffle();
-      // Prevent cross-cycle repeat
-      if (this.lastDrawn !== null && this.remaining.length > 1) {
-        const lastIdx = this.remaining.length - 1;
-        if (this.remaining[lastIdx] === this.lastDrawn) {
-          const swapIdx = Math.floor(Math.random() * (this.remaining.length - 1));
-          [this.remaining[lastIdx], this.remaining[swapIdx]] = [
-            this.remaining[swapIdx],
-            this.remaining[lastIdx],
-          ];
-        }
-      }
-    }
-    const item = this.remaining.pop()!;
-    this.lastDrawn = item;
-    return item;
-  }
-}
-
-// ─── Context-Aware Insult Matchers ────────────────────────────────────────────
-
-// Build ShuffleBags for each contextual category — guarantees no-repeat per category
-const contextualBags = new Map<string, ShuffleBag<string>>();
-for (const [category, lines] of Object.entries(insults.contextual)) {
-  contextualBags.set(category, new ShuffleBag(lines));
-}
-
-function getContextInsult(toolName: string, input: unknown, bags: Map<string, ShuffleBag<string>>): string | null {
-  if (typeof input !== "object" || input === null) return null;
-  const inp = input as Record<string, unknown>;
-  const command = typeof inp.command === "string" ? inp.command : "";
-  const path = typeof inp.path === "string" ? inp.path : "";
-  const message = typeof inp.message === "string" ? inp.message : "";
-
-  // Bash / Git command patterns
-  if (toolName === "bash" && command) {
-    if (/\brm\s+-rf\b/.test(command)) return bags.get("rm_rf")?.next() ?? null;
-    if (/git\s+push\s+(-f\b|--force\b|--f\b)/.test(command)) return bags.get("force_push")?.next() ?? null;
-    if (/git\s+commit\b/.test(command)) return bags.get("git_commit")?.next() ?? null;
-    if (/\bsudo\b/.test(command)) return bags.get("sudo")?.next() ?? null;
-    if (/\b(npm\s+install|yarn\s+add|pnpm\s+add)\b/.test(command)) return bags.get("npm_install")?.next() ?? null;
-    if (/\bcurl\b/.test(command)) return bags.get("curl")?.next() ?? null;
-    if (/\bchmod\b/.test(command)) return bags.get("chmod")?.next() ?? null;
-    if (/\bdocker-compose\b/.test(command)) return bags.get("docker_compose")?.next() ?? null;
-    if (/\bdocker\b/.test(command)) return bags.get("docker")?.next() ?? null;
-    if (/\bkill\b/.test(command)) return bags.get("kill")?.next() ?? null;
-    if (/\bssh\b/.test(command)) return bags.get("ssh")?.next() ?? null;
-    if (/\baws\b/.test(command)) return bags.get("aws")?.next() ?? null;
-    if (/\b(kubectl|helm)\b/.test(command)) return bags.get("kubernetes")?.next() ?? null;
-    if (/\bcrontab\b/.test(command)) return bags.get("cron")?.next() ?? null;
-    if (/\bcargo\b/.test(command)) return bags.get("rust")?.next() ?? null;
-    if (/\bgo\s+(build|run|test|mod|get|generate)\b/.test(command)) return bags.get("go_lang")?.next() ?? null;
-    if (/\b(make|makefile)\b/i.test(command)) return bags.get("makefile")?.next() ?? null;
-    if (/\bgrep\b/.test(command)) return bags.get("grep")?.next() ?? null;
-    if (/\bpython[23]?\b/.test(command)) return bags.get("python")?.next() ?? null;
-    if (/\bpsql\b|\bmysql\b|\bsqlite3\b/.test(command)) return bags.get("sql")?.next() ?? null;
-  }
-
-  // Git commit via a wrapper tool — match exact tool names, not loose substring
-  if (message && (toolName === "git" || toolName === "git_commit" || toolName === "github")) {
-    return bags.get("git_commit")?.next() ?? null;
-  }
-
-  // AI assistant tool names — fire ai_assist roasts when the dev leans on AI for everything
-  if (/^(ask|prompt|ai_|llm_|gpt_|copilot|anthropic|gemini)/i.test(toolName)) {
-    return bags.get("ai_assist")?.next() ?? null;
-  }
-
-  // File path patterns
-  if (path) {
-    if (/\.env\b/.test(path)) return bags.get("env_file")?.next() ?? null;
-    if (/package\.json$/.test(path)) return bags.get("package_json")?.next() ?? null;
-    if (/\.(yaml|yml)$/i.test(path)) return bags.get("yaml")?.next() ?? null;
-
-    // Exact word match for temp dirs/files to avoid path false positives
-    if (/\b(temp|tmp|hack|wip|fix)\b/i.test(path)) return bags.get("temp_file")?.next() ?? null;
-
-    if (/README/i.test(path)) return bags.get("readme")?.next() ?? null;
-    if (/config/i.test(path) && !/node_modules/.test(path)) return bags.get("config")?.next() ?? null;
-    if (/node_modules/.test(path)) return bags.get("node_modules")?.next() ?? null;
-    if (/\.(test|spec)\./i.test(path)) return bags.get("test_file")?.next() ?? null;
-    if (/\.rs$/.test(path)) return bags.get("rust")?.next() ?? null;
-    if (/\.go$/.test(path)) return bags.get("go_lang")?.next() ?? null;
-    if (/\.(ts|tsx)$/.test(path)) return bags.get("typescript")?.next() ?? null;
-    if (/\/(cron|crontab(\.d)?)\//i.test(path)) return bags.get("cron")?.next() ?? null;
-  }
-
-  return null;
-}
-
 // ─── Model-switch roasts ──────────────────────────────────────────────────────
 
-const modelRoastBag = new ShuffleBag([
+const modelRoasts = [
   "Switching models? Running from your problems again.",
   "New model, same mistakes.",
   "Good luck with that one. It'll need it.",
@@ -200,99 +74,73 @@ const modelRoastBag = new ShuffleBag([
   "No. No. Don't change models. Change developers!",
   "What? You're calling ALL the models to help you.",
   "New model? Have you tried baking instead of coding?",
-]);
-
-// ─── Constants & Settings ───────────────────────────────────────────────────────
-
-const WIDGET_KEY = "pi-roast";
-const ENABLED_CUSTOM_TYPE = "pi-roast-enabled";
-
-const DEFAULT_CONFIG: RoastConfig = {
-  idleMinMs: 45_000,
-  idleMaxMs: 120_000,
-  readInsultChance: 0.3,
-  failureInsultChance: 0.5,
-  unclassifiedToolChance: 0.15,
-  highPriorityTools: ["bash", "write", "edit"],
-  lowPriorityTools: ["read"],
-  color: "accent",
-};
-
-// Built once from DEFAULT_CONFIG — no per-call allocation in the hot path
-const HIGH_PRIORITY_TOOLS = new Set(DEFAULT_CONFIG.highPriorityTools);
-const LOW_PRIORITY_TOOLS = new Set(DEFAULT_CONFIG.lowPriorityTools);
+];
 
 // ─── Extension ──────────────────────────────────────────────────────────────────
 
 export default function (pi: ExtensionAPI) {
-  const bag = new ShuffleBag(insults.general);
+  // Build ShuffleBags
+  const generalBag = new ShuffleBag(insults.general);
   const failureBag = new ShuffleBag(insults.failures);
+  const modelBag = new ShuffleBag(modelRoasts);
+  const contextualBags = new Map<string, ShuffleBag<string>>();
+  for (const [category, lines] of Object.entries(insults.contextual)) {
+    contextualBags.set(category, new ShuffleBag(lines));
+  }
 
-  let idleTimer: ReturnType<typeof setTimeout> | null = null;
-  let lastCtx: any = null;
+  // Create sub-modules
+  const engine = createRoastEngine({
+    generalBag,
+    failureBag,
+    modelBag,
+    contextualBags,
+    rules: MATCH_RULES,
+    config: {
+      highPriorityTools: new Set(["bash", "write", "edit"]),
+      lowPriorityTools: new Set(["read"]),
+      readInsultChance: 0.3,
+      failureInsultChance: 0.5,
+      unclassifiedToolChance: 0.15,
+    },
+  });
+
+  // Single EnabledState: branch is bound on session_start via currentBranch holder.
+  let currentBranch: unknown[] = [];
+  const enabledState = createEnabledState({
+    getBranch: () => currentBranch as Array<{ type: string; customType?: string; data?: { enabled?: boolean } }>,
+    appendEntry: (type, data) => pi.appendEntry(type, data),
+  });
+
+  const idleScheduler = createIdleScheduler({
+    idleMinMs: 45_000,
+    idleMaxMs: 120_000,
+  });
+
+  // Mutable state: narrow holders for current UI + enabled flag + color
+  let currentUi: { setWidget: (key: string, widget: unknown) => void } | null = null;
   let enabled = true;
+  let color: ThemeFgColor = "accent";
 
-  // ── Helpers ──
-
-  async function loadEnabledState(ctx: any): Promise<void> {
-    enabled = true;
-    const entries = ctx.sessionManager.getBranch();
-    // Walk in reverse to find the most recent enabled state
-    for (let i = entries.length - 1; i >= 0; i--) {
-      const entry = entries[i];
-      if (entry.type === "custom" && entry.customType === ENABLED_CUSTOM_TYPE) {
-        enabled = entry.data?.enabled ?? true;
-        return;
-      }
-    }
+  // Widget bound to currentUi — recreated when ui changes
+  function getWidget() {
+    if (!currentUi) return null;
+    return createWidget(currentUi);
   }
-
-  async function saveEnabledState(): Promise<void> {
-    pi.appendEntry(ENABLED_CUSTOM_TYPE, { enabled });
-  }
-
-  // ── Core roast functions ──
 
   function roast(insult?: string): void {
-    if (!lastCtx) return;
-    const text = "🔥 " + (insult ?? bag.next());
-    const color = DEFAULT_CONFIG.color as ThemeFgColor;
-    lastCtx.ui.setWidget(WIDGET_KEY, (_tui, theme) => ({
-      render: () => [theme.fg(color, text)],
-      invalidate: () => {},
-    }));
+    const widget = getWidget();
+    if (!widget) return;
+    const text = insult ?? generalBag.next();
+    widget.render(text, color);
   }
 
-  function roastIfEnabled(insult?: string): void {
-    if (!enabled) return;
-    roast(insult);
-    // Don't schedule idle here — the agent is actively working.
-    // Idle roast resumes on turn_end.
-  }
-
-  function clearStatus(): void {
-    if (lastCtx) {
-      lastCtx.ui.setWidget(WIDGET_KEY, undefined);
-    }
-  }
-
-  // ── Idle timer ──
-
+  // Single idle-roast schedule: roasts from generalBag if still enabled when the timer fires.
   function scheduleIdleRoast(): void {
-    stopIdleRoast();
-    const delay = randomBetween(DEFAULT_CONFIG.idleMinMs, DEFAULT_CONFIG.idleMaxMs);
-    idleTimer = setTimeout(() => {
-      if (enabled && lastCtx) roast();
-      // Don't reschedule — pause roasting until next activity.
-      // turn_end / agent_end events will restart the cycle when the user is back.
-    }, delay);
-  }
-
-  function stopIdleRoast(): void {
-    if (idleTimer) {
-      clearTimeout(idleTimer);
-      idleTimer = null;
-    }
+    idleScheduler.schedule(() => {
+      if (!enabled) return;
+      const insult = engine.onIdleTick();
+      if (insult) roast(insult);
+    });
   }
 
   // ── Commands ──
@@ -300,9 +148,9 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("roast", {
     description: "Toggle pi-roast on/off",
     handler: async (_args, ctx) => {
-      lastCtx = ctx;
+      currentUi = ctx.ui;
       enabled = !enabled;
-      await saveEnabledState();
+      enabledState.save(enabled);
 
       if (enabled) {
         ctx.ui.notify("🔥 pi-roast activated", "info");
@@ -310,8 +158,8 @@ export default function (pi: ExtensionAPI) {
         scheduleIdleRoast();
       } else {
         ctx.ui.notify("🔇 pi-roast muted", "info");
-        stopIdleRoast();
-        clearStatus();
+        idleScheduler.pause();
+        getWidget()?.clear();
       }
     },
   });
@@ -319,7 +167,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("roast-me", {
     description: "Get roasted on demand (works even when muted)",
     handler: async (_args, ctx) => {
-      lastCtx = ctx;
+      currentUi = ctx.ui;
       roast();
     },
   });
@@ -327,15 +175,14 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("roast-color", {
     description: `Set roast text color. Options: ${THEME_FG_COLORS.join(", ")}`,
     handler: async (args, ctx) => {
-      const color = args.trim().toLowerCase();
-      if (!THEME_FG_COLORS.includes(color as ThemeFgColor)) {
-        ctx.ui.notify(`Invalid color "${color}". Options: ${THEME_FG_COLORS.join(", ")}`, "error");
+      const newColor = args.trim().toLowerCase();
+      if (!THEME_FG_COLORS.includes(newColor as ThemeFgColor)) {
+        ctx.ui.notify(`Invalid color "${newColor}". Options: ${THEME_FG_COLORS.join(", ")}`, "error");
         return;
       }
-      DEFAULT_CONFIG.color = color;
-      ctx.ui.notify(`🔥 Roast color set to ${color}`, "info");
-      // Re-render current roast with new color
-      if (enabled && lastCtx) {
+      color = newColor as ThemeFgColor;
+      ctx.ui.notify(`🔥 Roast color set to ${newColor}`, "info");
+      if (enabled) {
         roast();
       }
     },
@@ -344,8 +191,9 @@ export default function (pi: ExtensionAPI) {
   // ── Events ──
 
   pi.on("session_start", async (_event, ctx) => {
-    lastCtx = ctx;
-    await loadEnabledState(ctx);
+    currentUi = ctx.ui;
+    currentBranch = ctx.sessionManager.getBranch();
+    enabled = enabledState.load();
 
     if (enabled) {
       ctx.ui.notify("🔥 pi-roast activated", "info");
@@ -354,75 +202,59 @@ export default function (pi: ExtensionAPI) {
     }
   });
 
-  // ── Turn lifecycle: pause idle during active work, resume when idle ──
+  // ── Turn lifecycle ──
 
   pi.on("turn_start", async () => {
-    stopIdleRoast();
+    idleScheduler.pause();
   });
 
   pi.on("turn_end", async (_event, ctx) => {
-    lastCtx = ctx;
+    currentUi = ctx.ui;
     if (enabled) scheduleIdleRoast();
   });
 
   pi.on("agent_end", async (_event, ctx) => {
-    lastCtx = ctx;
+    currentUi = ctx.ui;
     if (enabled) scheduleIdleRoast();
   });
 
   // ── Tool events ──
 
   pi.on("tool_call", async (event: ToolCallEvent, ctx) => {
-    lastCtx = ctx;
+    currentUi = ctx.ui;
     if (!enabled) return;
-
-    const contextInsult = getContextInsult(event.toolName, event.input, contextualBags);
-
-    if (HIGH_PRIORITY_TOOLS.has(event.toolName)) {
-      roastIfEnabled(contextInsult ?? undefined);
-    } else if (LOW_PRIORITY_TOOLS.has(event.toolName)) {
-      if (Math.random() < DEFAULT_CONFIG.readInsultChance) {
-        roastIfEnabled(contextInsult ?? undefined);
-      }
-    } else {
-      // Unclassified tools get a small chance to roast
-      if (Math.random() < DEFAULT_CONFIG.unclassifiedToolChance) {
-        roastIfEnabled(contextInsult ?? undefined);
-      }
-    }
+    const insult = engine.onToolCall(event.toolName, event.input);
+    if (insult) roast(insult);
   });
 
   pi.on("tool_result", async (event: ToolResultEvent, ctx) => {
-    lastCtx = ctx;
+    currentUi = ctx.ui;
     if (!enabled) return;
-
     const isError = Boolean(event.isError ?? event.result?.isError);
-
-    if (isError && Math.random() < DEFAULT_CONFIG.failureInsultChance) {
-      roastIfEnabled(failureBag.next());
-    }
+    const insult = engine.onToolResult(isError);
+    if (insult) roast(insult);
   });
 
   // ── Model events ──
 
-  pi.on("model_select", async (event, ctx) => {
-    lastCtx = ctx;
+  pi.on("model_select", async (_event, ctx) => {
+    currentUi = ctx.ui;
     if (!enabled) return;
-
-    roastIfEnabled(modelRoastBag.next());
+    const insult = engine.onModelSelect();
+    if (insult) roast(insult);
   });
 
   // ── Session lifecycle ──
 
   pi.on("session_before_switch", async () => {
-    stopIdleRoast();
-    clearStatus();
-    lastCtx = null;
+    idleScheduler.pause();
+    getWidget()?.clear();
+    currentUi = null;
   });
 
   pi.on("session_shutdown", async () => {
-    stopIdleRoast();
-    clearStatus();
-    lastCtx = null;
+    idleScheduler.pause();
+    getWidget()?.clear();
+    currentUi = null;
   });
 }

@@ -21,6 +21,13 @@
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
+  "devDependencies": {
+    "vitest": "^3.2.1"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
   "pi": {
     "extensions": [
       "./extensions"

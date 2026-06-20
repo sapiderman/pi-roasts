@@ -5,7 +5,7 @@ Looking to contribute to `pi-roast`? Why?! haha. This project is intentionally s
 ## What to contribute
 
 - New insults or contextual categories in `insults.json`
-- Improved context detection or roast behavior in `pi-roast.ts`
+- Improved context detection in `extensions/context-matcher.ts` or roast dispatch behavior in `extensions/roast-engine.ts`
 - Better documentation in `README.md` or `CONTRIBUTION.md`
 - Bug fixes or performance improvements for the extension logic
 
@@ -13,7 +13,7 @@ Looking to contribute to `pi-roast`? Why?! haha. This project is intentionally s
 
 1. Fork the repository and clone it locally.
 2. Create a feature branch with a descriptive name, e.g. `add-npm-context-roasts`.
-3. Make your changes in `insults.json`, `pi-roast.ts`, and/or documentation files.
+3. Make your changes in `insults.json`, the relevant module(s) under `extensions/`, and/or documentation files.
 4. Verify your change manually by loading the extension in Pi:
 
 ```bash
@@ -29,7 +29,7 @@ If you prefer the project-local install flow, copy the file into `.pi/extensions
 - `failures` is used when a tool command fails.
 - `contextual` holds category-specific insult arrays.
 
-If you add a new contextual category, also update `pi-roast.ts` so the extension can match that context and return the new insults.
+If you add a new contextual category, also add a matching rule to the `MATCH_RULES` table in `extensions/context-matcher.ts` so the extension can match that context and return the new insults.
 
 ## Style guidelines
 
@@ -49,8 +49,8 @@ If you add a new contextual category, also update `pi-roast.ts` so the extension
 
 ## Notes
 
-- This project does not currently include an automated test suite, so manual verification is the primary validation method. Will add tests when i get round to it.
-- If you update contextual insults, double-check the matching logic in `pi-roast.ts`.
+- Run tests with `npm test`. Tests use vitest and cover the core modules (ShuffleBag, context matcher, roast engine, etc.).
+- If you update contextual insults, double-check the matching rules in `extensions/context-matcher.ts` and consider adding a test to `extensions/__tests__/context-matcher.test.ts`.
 - Will add multi language support.
 
 Thanks for helping make `pi-roast` better and more entertaining! 🎯
