@@ -1,6 +1,6 @@
 {
   "name": "pi-roasts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A pi extension that roasts you while you code.",
   "keywords": [
     "pi-package",
@@ -30,7 +30,7 @@
   },
   "pi": {
     "extensions": [
-      "./extensions"
+      "./extensions/pi-roast.ts"
     ],
     "image": "https://raw.githubusercontent.com/sapiderman/pi-roasts/main/assets/screenshot.png"
   }
