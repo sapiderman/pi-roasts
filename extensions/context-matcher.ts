@@ -32,11 +32,11 @@ export interface ToolSignal {
  */
 export const MATCH_RULES: MatchRule[] = [
   // Bash / Git command patterns (gated on toolName === "bash")
-  { signal: "command", toolGate: "bash", pattern: /\brm\s+-rf\b/, category: "rm_rf" },
+  { signal: "command", toolGate: "bash", pattern: /\b(rm\s+-[a-z]*[rf][a-z]*|rimraf|unlink)\b/, category: "rm_rf" },
   { signal: "command", toolGate: "bash", pattern: /git\s+push\s+(-f\b|--force\b|--f\b)/, category: "force_push" },
   { signal: "command", toolGate: "bash", pattern: /git\s+commit\b/, category: "git_commit" },
   { signal: "command", toolGate: "bash", pattern: /\bsudo\b/, category: "sudo" },
-  { signal: "command", toolGate: "bash", pattern: /\b(npm\s+install|yarn\s+add|pnpm\s+add)\b/, category: "npm_install" },
+  { signal: "command", toolGate: "bash", pattern: /\b(npm\s+(i|install)|yarn(\s+add)?|pnpm\s+(i|add|install)|bun\s+(add|install))\b/, category: "npm_install" },
   { signal: "command", toolGate: "bash", pattern: /\bcurl\b/, category: "curl" },
   { signal: "command", toolGate: "bash", pattern: /\bchmod\b/, category: "chmod" },
   { signal: "command", toolGate: "bash", pattern: /\bdocker-compose\b/, category: "docker_compose" },
@@ -44,13 +44,13 @@ export const MATCH_RULES: MatchRule[] = [
   { signal: "command", toolGate: "bash", pattern: /\bkill\b/, category: "kill" },
   { signal: "command", toolGate: "bash", pattern: /\bssh\b/, category: "ssh" },
   { signal: "command", toolGate: "bash", pattern: /\baws\b/, category: "aws" },
-  { signal: "command", toolGate: "bash", pattern: /\b(kubectl|helm)\b/, category: "kubernetes" },
+  { signal: "command", toolGate: "bash", pattern: /\b(kubectl|helm|k9s|minikube)\b/, category: "kubernetes" },
   { signal: "command", toolGate: "bash", pattern: /\bcrontab\b/, category: "cron" },
   { signal: "command", toolGate: "bash", pattern: /\bcargo\b/, category: "rust" },
   { signal: "command", toolGate: "bash", pattern: /\bgo\s+(build|run|test|mod|get|generate)\b/, category: "go_lang" },
   { signal: "command", toolGate: "bash", pattern: /\b(make|makefile)\b/i, category: "makefile" },
-  { signal: "command", toolGate: "bash", pattern: /\bgrep\b/, category: "grep" },
-  { signal: "command", toolGate: "bash", pattern: /\bpython[23]?\b/, category: "python" },
+  { signal: "command", toolGate: "bash", pattern: /\b(grep|rg|ripgrep|ag|ack)\b/, category: "grep" },
+  { signal: "command", toolGate: "bash", pattern: /\b(python[23]?|pytest|pip[23]?|poetry|uv|pipenv)\b/, category: "python" },
   { signal: "command", toolGate: "bash", pattern: /\bpsql\b|\bmysql\b|\bsqlite3\b/, category: "sql" },
 
   // Git commit via wrapper tool — requires non-empty message
@@ -63,7 +63,7 @@ export const MATCH_RULES: MatchRule[] = [
 
   // File path patterns
   { signal: "path", pattern: /\.env\b/, category: "env_file" },
-  { signal: "path", pattern: /package\.json$/, category: "package_json" },
+  { signal: "path", pattern: /package(-lock)?\.json$/, category: "package_json" },
   { signal: "path", pattern: /\.(yaml|yml)$/i, category: "yaml" },
   { signal: "path", pattern: /\b(temp|tmp|hack|wip|fix)\b/i, category: "temp_file" },
   { signal: "path", pattern: /README/i, category: "readme" },
@@ -73,6 +73,10 @@ export const MATCH_RULES: MatchRule[] = [
   { signal: "path", pattern: /\.rs$/, category: "rust" },
   { signal: "path", pattern: /\.go$/, category: "go_lang" },
   { signal: "path", pattern: /\.(ts|tsx)$/, category: "typescript" },
+  { signal: "path", pattern: /\.py$/, category: "python" },
+  { signal: "path", pattern: /\.sql$/i, category: "sql" },
+  { signal: "path", pattern: /(^|\/)(dockerfile|containerfile)(\.|$)/i, category: "docker" },
+  { signal: "path", pattern: /(^|\/)makefile$/i, category: "makefile" },
   { signal: "path", pattern: /\/(cron|crontab(\.d)?)\//i, category: "cron" },
 ];
 
