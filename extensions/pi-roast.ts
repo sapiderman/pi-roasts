@@ -12,20 +12,27 @@ import { createIdleScheduler } from "./idle-scheduler.js";
 interface InsultsData {
   general: string[];
   failures: string[];
+  model: string[];
   contextual: Record<string, string[]>;
 }
 
 function validateInsultsData(data: unknown): InsultsData {
   if (typeof data !== "object" || data === null) throw new Error("insults.json: expected object");
   const d = data as Record<string, unknown>;
-  for (const key of ["general", "failures", "contextual"] as const) {
-    if (!Array.isArray(d[key]) && key !== "contextual") {
+
+  for (const key of ["general", "failures", "model"] as const) {
+    if (!Array.isArray(d[key])) {
       throw new Error(`insults.json: expected "${key}" to be an array`);
     }
+    for (const item of d[key] as unknown[]) {
+      if (typeof item !== "string") throw new Error(`insults.json: "${key}" must contain strings`);
+    }
   }
+
   if (typeof d.contextual !== "object" || d.contextual === null) {
     throw new Error("insults.json: expected 'contextual' to be an object");
   }
+
   for (const [cat, val] of Object.entries(d.contextual as Record<string, unknown>)) {
     if (!Array.isArray(val)) throw new Error(`insults.json: contextual.${cat} must be an array`);
     for (const item of val) {
@@ -59,30 +66,13 @@ interface ToolResultEvent {
   };
 }
 
-// ─── Model-switch roasts ──────────────────────────────────────────────────────
-
-const modelRoasts = [
-  "Switching models? Running from your problems again.",
-  "New model, same mistakes.",
-  "Good luck with that one. It'll need it.",
-  "The model changed but your code didn't.",
-  "Maybe this one can fix what you broke.",
-  "Different model, same skill issues.",
-  "A new model won't save you from yourself.",
-  "Opus called. They want their tokens back.",
-  "New model, same dev. Try harder.",
-  "No. No. Don't change models. Change developers!",
-  "What? You're calling ALL the models to help you.",
-  "New model? Have you tried baking instead of coding?",
-];
-
 // ─── Extension ──────────────────────────────────────────────────────────────────
 
 export default function (pi: ExtensionAPI) {
   // Build ShuffleBags
   const generalBag = new ShuffleBag(insults.general);
   const failureBag = new ShuffleBag(insults.failures);
-  const modelBag = new ShuffleBag(modelRoasts);
+  const modelBag = new ShuffleBag(insults.model);
   const contextualBags = new Map<string, ShuffleBag<string>>();
   for (const [category, lines] of Object.entries(insults.contextual)) {
     contextualBags.set(category, new ShuffleBag(lines));

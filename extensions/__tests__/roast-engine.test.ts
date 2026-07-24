@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { ShuffleBag } from "../shuffle-bag.js";
-import { createRoastEngine, type RoastEngineDeps } from "../roast-engine.js";
+import { createRoastEngine, extractSignals, type RoastEngineDeps } from "../roast-engine.js";
 import { MATCH_RULES } from "../context-matcher.js";
 
 function createTestDeps(overrides: Partial<RoastEngineDeps> = {}): RoastEngineDeps {
@@ -123,6 +123,16 @@ describe("RoastEngine", () => {
     it("always returns from general bag", () => {
       const engine = createRoastEngine(createTestDeps());
       expect(engine.onIdleTick()).toBe("general insult");
+    });
+  });
+
+  describe("extractSignals", () => {
+    it("extracts path from path, filePath, targetFile, file, or file_path", () => {
+      expect(extractSignals("write", { path: "a.ts" }).path).toBe("a.ts");
+      expect(extractSignals("write", { filePath: "b.ts" }).path).toBe("b.ts");
+      expect(extractSignals("write", { targetFile: "c.ts" }).path).toBe("c.ts");
+      expect(extractSignals("write", { file: "d.ts" }).path).toBe("d.ts");
+      expect(extractSignals("write", { file_path: "e.ts" }).path).toBe("e.ts");
     });
   });
 });

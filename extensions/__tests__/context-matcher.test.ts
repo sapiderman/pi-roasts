@@ -181,5 +181,41 @@ describe("ContextMatcher", () => {
       });
       expect(result).toBe("package_json");
     });
+
+    // Python path
+    it("matches python for .py files", () => {
+      const result = matchContext(MATCH_RULES, {
+        toolName: "edit",
+        path: "script.py",
+      });
+      expect(result).toBe("python");
+    });
+
+    // SQL path
+    it("matches sql for .sql files", () => {
+      const result = matchContext(MATCH_RULES, {
+        toolName: "edit",
+        path: "migration.sql",
+      });
+      expect(result).toBe("sql");
+    });
+
+    // Dockerfile path
+    it("matches docker for Dockerfile path", () => {
+      const result = matchContext(MATCH_RULES, {
+        toolName: "write",
+        path: "Dockerfile",
+      });
+      expect(result).toBe("docker");
+    });
+
+    // Makefile path
+    it("matches makefile for Makefile path", () => {
+      const result = matchContext(MATCH_RULES, {
+        toolName: "write",
+        path: "Makefile",
+      });
+      expect(result).toBe("makefile");
+    });
   });
 });

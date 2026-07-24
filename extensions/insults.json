@@ -202,7 +202,37 @@
     "You named the flag 'shouldNotSkip'. Now everyone reads it twice and still guesses.",
     "The retry logic retries immediately, in a tight loop, with no backoff. Your server will love this.",
     "You're reading the environment variable inside a hot path. Every call. Every time.",
-    "That index.ts exports 47 things. It's not a module, it's a mall."
+    "That index.ts exports 47 things. It's not a module, it's a mall.",
+    "Your code is like a horror movie where the victim is the maintainer.",
+    "I've seen try-catch blocks with less denial.",
+    "You didn't fix the race condition, you just gave it a head start.",
+    "That variable scope is wide enough to fit your ego.",
+    "Is your debugging strategy trial and error, or just error and error?",
+    "You don't need a debugger, you need an exorcist.",
+    "Your commit history is proof that hope is not a strategy.",
+    "You wrote a microservice for something that could've been a single pure function.",
+    "Calling it 'self-documenting code' doesn't excuse writing zero comments.",
+    "Your architecture is like a house of cards built on a waterbed.",
+    "That's not technical debt, that's technical bankruptcy.",
+    "You named a variable `temp_final_v3`. May God have mercy on your pull request.",
+    "Your error handling strategy is 'ignorance is bliss'.",
+    "I see you chose the 'copy from StackOverflow, delete the comments, and pray' method.",
+    "That function has a cognitive complexity score higher than your SATs.",
+    "You're writing code like you're trying to hide evidence from your future self.",
+    "That `any` cast is doing heavy lifting that no type system should ever witness.",
+    "Your code relies on happy paths so much it should come with a sunshine tax.",
+    "You refactored a working 5-line function into 200 lines of abstract factory factories.",
+    "That loop is so tight it's choking the event loop.",
+    "Your PR description is 'fixes stuff'. Groundbreaking technical documentation.",
+    "You don't write clean code, you write code that cleans out your team's sanity.",
+    "Your idea of modularity is splitting one bad function into three worse files.",
+    "You wrote 400 lines of code before running it once. That's not confidence, that's reckless gamble.",
+    "Your function is so side-effect heavy it requires an environmental impact study.",
+    "I've seen spaghetti with better structural integrity.",
+    "You're treating unit tests like optional side quests.",
+    "Your code isn't modular, it's just scattered.",
+    "That variable is initialized, modified, overwritten, and ignored all in six lines.",
+    "You're debugging with console logs like it's 1999."
   ],
   "failures": [
     "That command failed. Just like the last three.",
@@ -263,7 +293,44 @@
     "The migration rolled back. History is doomed to repeat itself, apparently.",
     "Your health check returned 200 and yet nothing is healthy. Relatable.",
     "Heap dump generated. It reads like a tragedy.",
-    "The test suite passed. In a different branch. Where none of this code exists."
+    "The test suite passed. In a different branch. Where none of this code exists.",
+    "The code crashed so fast it didn't even have time to leave a stack trace.",
+    "That assertion didn't fail, it was executed for crimes against logic.",
+    "Exit code 137: OOM killed. Your app ate memory like an all-you-can-eat buffet.",
+    "The build failed. Even the compiler has standards.",
+    "Your test suite failed in 2ms. It didn't even bother reading your code.",
+    "Uncaught Exception: your code wasn't ready for reality.",
+    "The pipeline took 15 minutes just to tell you that you forgot a semicolon.",
+    "That segfault was your OS stepping in to prevent further damage.",
+    "Panic: runtime failed, developer bewildered.",
+    "Error: cannot read property of undefined. Standard Tuesday.",
+    "The container exited immediately out of sheer self-respect.",
+    "Your build logs are longer than War and Peace and twice as tragic.",
+    "Test failed: Expected 200 OK, got 500 Internal Server Panic.",
+    "The linters gave up and filed a collective grievance.",
+    "Stack overflow. Your recursion loop is currently touring the galaxy.",
+    "Error 502 Bad Gateway: even the gateway refuses to connect you to that logic.",
+    "The test runner finished, but your dignity did not survive."
+  ],
+  "model": [
+    "Switching models? Running from your problems again.",
+    "New model, same mistakes.",
+    "Good luck with that one. It'll need it.",
+    "The model changed but your code didn't.",
+    "Maybe this one can fix what you broke.",
+    "Different model, same skill issues.",
+    "A new model won't save you from yourself.",
+    "Opus called. They want their tokens back.",
+    "New model, same dev. Try harder.",
+    "No. No. Don't change models. Change developers!",
+    "What? You're calling ALL the models to help you.",
+    "New model? Have you tried baking instead of coding?",
+    "Switching models again? The model isn't the one making the typos.",
+    "Blaming the AI model for your prompt design... classic.",
+    "Model changed! Will it write better code or just fail with higher vocabulary?",
+    "Switching to a bigger model won't shrink your tech debt.",
+    "You're model-hopping like it's a speedrun.",
+    "New model selected. Same developer habits."
   ],
   "contextual": {
     "rm_rf": [
@@ -271,14 +338,20 @@
       "rm -rf: the command that separates devs from ex-devs.",
       "That rm -rf is a one-way ticket to rebuild city.",
       "rm -rf: the 'hold my beer' of Linux commands.",
-      "Nothing says confidence like deleting everything and starting over."
+      "Nothing says confidence like deleting everything and starting over.",
+      "rm -rf: because backups are for people who lack thrill.",
+      "Deleting directory by directory like a villain origin story.",
+      "rm -rf: the fastest way to turn your local dev setup into a blank canvas."
     ],
     "sudo": [
       "sudo: because normal permissions are for normal code.",
       "sudo make me a sandwich. Wait, wrong command.",
       "Another sudo? What are you, the root of all problems?",
       "sudo: the magic word that turns bad ideas into worse ideas, faster.",
-      "Ah, sudo. For when you want your mistakes to have administrator privileges."
+      "Ah, sudo. For when you want your mistakes to have administrator privileges.",
+      "sudo: when your code lacks authority, just force it.",
+      "Applying sudo to a permission error you caused yourself. Chef's kiss.",
+      "Root privilege won't fix logic errors, but nice try."
     ],
     "force_push": [
       "Force push? Bold move. Your teammates will love that.",
@@ -287,7 +360,10 @@
       "Rewriting history? Even the timeline is rolling its eyes.",
       "Force push: for when you're 100% sure you're wrong but want to be fast about it.",
       "Congratulations, you just became everyone's least favorite coworker. Again.",
-      "Force push: the 'it's not me, it's you' of version control."
+      "Force push: the 'it's not me, it's you' of version control.",
+      "Force push to main? I hope your resume is up to date.",
+      "git push --force --no-verify: when you know you're wrong and want to ruin everyone's day.",
+      "Force pushing: because git history is just a draft to you anyway."
     ],
     "npm_install": [
       "Another dependency. Your node_modules is already a small country.",
@@ -296,71 +372,95 @@
       "I see you're outsourcing your logic to a random 0.0.1 library.",
       "Six transitive dependencies for a function that left-pads a string. Inspired.",
       "npm install: the developer's way of saying 'someone else's problem.'",
-      "Your node_modules folder has more content than your actual project. Let that sink in."
+      "Your node_modules folder has more content than your actual project. Let that sink in.",
+      "npm install: downloading 400MB of dependencies for a string formatter.",
+      "You added another npm package with 12 vulnerabilities and 0 maintenance.",
+      "Your node_modules folder is now heavy enough to bend spacetime."
     ],
     "curl": [
       "Curling that URL like you know what it returns.",
       "curl and pray. The developer's creed.",
       "curl | bash. Security professionals weep softly in the background.",
-      "Piping curl directly into your shell. No notes. Maximum chaos."
+      "Piping curl directly into your shell. No notes. Maximum chaos.",
+      "Curling random endpoints and piping to bash. What could possibly go wrong?",
+      "curl -X POST with an empty payload. The endpoint is crying in silence."
     ],
     "chmod": [
       "chmod: when in doubt, make everything executable.",
       "That chmod is giving me anxiety.",
       "chmod 777. Because why have security when you can have convenience.",
-      "chmod 777: the 'everyone can touch this' setting. Bold choice for a production server."
+      "chmod 777: the 'everyone can touch this' setting. Bold choice for a production server.",
+      "chmod +x on every file in the directory. Safety first!",
+      "Making everything 777 because understanding permission bits takes 30 seconds of reading."
     ],
     "docker": [
       "Docker: because 'it works on my machine' wasn't enough.",
       "Your Docker container has more layers than a wedding cake.",
       "Docker: wrapping your bugs in a container so they're portable.",
       "Your Dockerfile has no healthcheck. The container will just silently fail and you'll never know.",
-      "Running as root inside the container? The security team has entered the chat."
+      "Running as root inside the container? The security team has entered the chat.",
+      "Your Dockerfile has 42 layers and bakes in a 2GB build cache. Pristine.",
+      "Container failed health check: turns out running as root without health checks has consequences.",
+      "Building a 4GB Docker image for a 10-line Node script. Truly enterprise."
     ],
     "kill": [
       "kill: the developer's way of saying 'I give up.'",
       "That kill signal is just you avoiding the real problem.",
       "kill -9: the 'stop talking' of process management.",
-      "kill -9 is not a graceful shutdown. Much like this codebase."
+      "kill -9 is not a graceful shutdown. Much like this codebase.",
+      "kill -9: the developer's universal solution for process problems.",
+      "Terminating processes because you couldn't figure out why they hung."
     ],
     "env_file": [
       "Touching .env? What could possibly go wrong.",
       "Editing .env. Bold move in production.",
       "That .env file is one typo away from an incident report.",
       "Checking .env into git? The security team has blocked your calendar.",
-      "Production credentials in a .env file. You're living life one breach away."
+      "Production credentials in a .env file. You're living life one breach away.",
+      "Committing .env files to GitHub: the fastest way to get automated emails from AWS.",
+      "Hardcoding production secrets into .env.example. Inspired security design."
     ],
     "package_json": [
       "Editing package.json. Here we go.",
       "Touching package.json? This ends with npm install, doesn't it.",
       "package.json: the gift that keeps on giving. Dependencies.",
       "Pinning to a major version with ^. You love surprises.",
-      "package.json: one accidental keypress from breaking the entire team's builds."
+      "package.json: one accidental keypress from breaking the entire team's builds.",
+      "Adding \"*\" as the dependency version. You really love living on the bleeding edge.",
+      "package.json is 300 lines long. Half of those packages were deprecated in 2021."
     ],
     "temp_file": [
       "Editing a temp file. The filename says everything.",
       "temp, tmp, hack, wip — the four horsemen of bad filenames.",
       "That file name is already an apology.",
       "A file called 'test2.js' in the root directory. Truly enterprise-grade.",
-      "That file screams 'I'll clean this up later.' The year is 2019."
+      "That file screams 'I'll clean this up later.' The year is 2019.",
+      "A file named test_final_v2_FIXED.ts. Truly enterprise-grade file naming.",
+      "Creating another scratch file you will abandon in 10 minutes."
     ],
     "readme": [
       "Reading the README? First time?",
       "The README! A novel you've been avoiding.",
       "The README said exactly what you needed. You still tried it the wrong way first, didn't you.",
-      "Reading the README after two hours of debugging. Classic."
+      "Reading the README after two hours of debugging. Classic.",
+      "The README hasn't been updated since the repository was initialized.",
+      "Reading the README after 3 hours of blind guessing. Standard procedure."
     ],
     "config": [
       "Touching config files? Living dangerously.",
       "Config changes: the gift that keeps on breaking.",
       "One wrong value in that config and production goes dark. Sleep well.",
-      "Editing config without a backup. The audacity. The recklessness. The vibe."
+      "Editing config without a backup. The audacity. The recklessness. The vibe.",
+      "Changing config values in prod and hoping nobody notices the downtime.",
+      "YAML config with 15 nested levels of indentation. Good luck finding the typo."
     ],
     "node_modules": [
       "You're reading node_modules. That's a cry for help.",
       "node_modules: the folder that ate your disk space.",
       "node_modules contains more code than the sum of human knowledge. You added to it today.",
-      "Browsing node_modules? At this point, just read the source of the universe."
+      "Browsing node_modules? At this point, just read the source of the universe.",
+      "Browsing node_modules looking for lost hope.",
+      "Deleting node_modules and running npm install again. The classic ritual."
     ],
     "test_file": [
       "Testing? How responsible of you. Didn't see that coming.",
@@ -368,7 +468,10 @@
       "Writing tests now? Did a bug hurt your feelings?",
       "Writing a test. Remarkable. Your future self sends their condolences.",
       "A test! Framed and mounted. This day shall be remembered.",
-      "Your test is testing that true is true. Groundbreaking coverage."
+      "Your test is testing that true is true. Groundbreaking coverage.",
+      "Writing tests that assert true === true. 100% coverage achieved!",
+      "A test file with zero assertions. Beautiful passive-aggressive coverage.",
+      "Skipping test execution with .only or describe.skip. Work smarter, not harder."
     ],
     "yaml": [
       "YAML: yet another massive headache. Good luck with the indentation.",
@@ -376,7 +479,9 @@
       "Indentation engineering. Truly the peak of our profession.",
       "YAML: the format that hates you and makes you prove it.",
       "Tabs vs spaces in YAML is not an opinion, it's a war crime.",
-      "Your YAML is valid. Your soul is not."
+      "Your YAML is valid. Your soul is not.",
+      "One space out of place in YAML and your entire infrastructure collapses.",
+      "Tabs in YAML? You like watching things burn."
     ],
     "git_commit": [
       "Committing already? That was fast. Or desperate.",
@@ -385,37 +490,50 @@
       "'wip' is not a commit message. It's a confession.",
       "Commit message: 'changes'. The git log reads like a ransom note.",
       "Amending a commit for the third time. Just own your mistakes like everyone else.",
-      "Your commit history reads like the stages of grief."
+      "Your commit history reads like the stages of grief.",
+      "Commit message: 'wip fast'. The code is neither working nor fast.",
+      "Committing directly to main on a Friday afternoon? Bold strategy.",
+      "Squashing 40 broken commits into one huge broken commit doesn't hide the crime."
     ],
     "grep": [
       "Grepping for answers because reading your own code is too hard.",
       "grep: because you lost track of where you put things. Again.",
       "Searching your own codebase like a stranger in a strange land.",
-      "grep -r is not documentation. But I respect the hustle."
+      "grep -r is not documentation. But I respect the hustle.",
+      "Grepping for TODO and finding 340 results. A minefield of broken dreams.",
+      "Searching for variable names you forgot 5 minutes ago."
     ],
     "python": [
       "Python: where indentation is load-bearing. You of all people should be careful.",
       "pip install: adding another mystery to your virtual environment.",
       "Your Python script starts with 'import everything'. Bold.",
-      "Global variables in Python. Because scope is a suggestion."
+      "Global variables in Python. Because scope is a suggestion.",
+      "IndentationError: unexpected indent. Python's gentle way of saying 'learn to space'.",
+      "Importing * from three modules. Global namespace collision speedrun."
     ],
     "sql": [
       "SELECT * in production. Your DBA is writing a strongly-worded email.",
       "No WHERE clause. Bold. Catastrophic. Efficient, in a terrible way.",
       "Raw SQL with string concatenation. The injection vector you built with your own hands.",
-      "That JOIN has a JOIN has a JOIN. Your query planner filed for retirement."
+      "That JOIN has a JOIN has a JOIN. Your query planner filed for retirement.",
+      "DROP TABLE without a backup. Living life in the fast lane.",
+      "Executing raw SQL queries built with string formatting. SQL injection loves you."
     ],
     "docker_compose": [
       "docker-compose up: praying that all the services start in the right order.",
       "Your docker-compose file has 11 services. For a to-do app.",
       "volumes: ./everything:/everything. The bravest single line of YAML.",
-      "Docker Compose: because manually orchestrating chaos wasn't enough."
+      "Docker Compose: because manually orchestrating chaos wasn't enough.",
+      "docker-compose up: turning your laptop fan into a jet engine.",
+      "Spinning up 8 microservices locally just to test a login button."
     ],
     "makefile": [
       "A Makefile. Keeping the dream of 1977 alive.",
       "Your Makefile has a target called 'magic'. I won't ask.",
       "Tabs in Makefiles are mandatory. You knew this. You did it anyway.",
-      "The Makefile said PHONY but your targets are very real and very broken."
+      "The Makefile said PHONY but your targets are very real and very broken.",
+      "Makefile target missing a tab. Unix history repeating itself.",
+      "Writing a 50-line bash script inside a Makefile target."
     ],
     "typescript": [
       "TypeScript: so you can be wrong with more precision.",
@@ -424,7 +542,10 @@
       "That `as unknown as YourType` cast is a war crime dressed as a type annotation.",
       "// @ts-ignore: the developer's white flag.",
       "Your generic has four type parameters and a constraint that violates itself.",
-      "You enabled strict mode but then spent an hour adding '!' everywhere. Democracy of denial."
+      "You enabled strict mode but then spent an hour adding '!' everywhere. Democracy of denial.",
+      "TypeScript 'any': for when you want the syntax of TS with the chaos of JS.",
+      "as unknown as any: the ultimate white flag of type safety.",
+      "Your generic type definition requires a Ph.D. to parse and returns unknown."
     ],
     "ai_assist": [
       "You asked the AI to write tests. For the AI-written code. We're in a recursion loop now.",
@@ -433,21 +554,29 @@
       "You asked the AI the same question four different ways hoping for a different answer. This is not how truth works.",
       "Congratulations. You're now a prompt engineer. Your code is still wrong.",
       "The AI told you what was wrong. You read it, nodded, and did the same thing again.",
-      "Your prompt was longer than your actual code. New definition of documentation."
+      "Your prompt was longer than your actual code. New definition of documentation.",
+      "Asking the AI to fix the bug that the AI wrote... peak 2026 developer workflow.",
+      "You're prompt-engineering your way into a production incident.",
+      "Copying AI code without reading it is just speedrunning code review rejection.",
+      "The AI gave you working code, but you edited it until it broke. Impressive."
     ],
     "ssh": [
       "SSH into prod? Bold. Reckless. Inevitable.",
       "You're editing production directly over SSH. The ops team is already composing an email.",
       "ssh root@production. Three words that haunt every postmortem.",
       "That SSH tunnel goes all the way through good judgment and out the other side.",
-      "You typed your password into the terminal instead of the password prompt. It's in the logs now."
+      "You typed your password into the terminal instead of the password prompt. It's in the logs now.",
+      "Editing code directly on the remote server over SSH. What is git anyway?",
+      "SSH connection timed out while you were in the middle of vim in prod."
     ],
     "cron": [
       "That cron job runs at midnight. Production disagrees with midnight.",
       "Your cron expression has six fields. The system only accepts five. It runs anyway. Somehow.",
       "'* * * * *' — every minute, forever, without mercy.",
       "You scheduled a cron job and forgot about it. It remembers you.",
-      "That cron job emails 10,000 users at 3am because nobody set a timezone."
+      "That cron job emails 10,000 users at 3am because nobody set a timezone.",
+      "Cron job set to '* * * * *' with zero locking. Your database server is panicking.",
+      "Setting cron to UTC without checking the server timezone. 3am alarms incoming."
     ],
     "aws": [
       "Your AWS bill has more line items than your feature backlog.",
@@ -455,7 +584,9 @@
       "That IAM role has AdministratorAccess. Your security audit has AdministratorFear.",
       "You left an S3 bucket public. The internet has been reading it all week.",
       "Your Lambda cold starts are longer than your user's attention span.",
-      "EC2 instance running since 2019, no one knows what it does, no one is allowed to turn it off."
+      "EC2 instance running since 2019, no one knows what it does, no one is allowed to turn it off.",
+      "IAM policy 'Action: *', 'Resource: *'. Security through blind trust.",
+      "Leaving an EC2 instance running over the weekend. RIP your credit card."
     ],
     "kubernetes": [
       "Your pod is in CrashLoopBackOff and you're reading the logs like they'll apologize.",
@@ -463,21 +594,27 @@
       "Kubernetes: because running one Docker container wasn't complicated enough.",
       "Your YAML has a YAML that has a YAML. It's turtles all the way down.",
       "OOMKilled. The container ate itself. Consider a diet.",
-      "Your readiness probe passes and the service still doesn't work. Beautiful."
+      "Your readiness probe passes and the service still doesn't work. Beautiful.",
+      "Kubernetes CrashLoopBackOff: your pod is having an existential crisis.",
+      "Setting memory limit to 10MB for a Java app. K8s OOMKilled incoming."
     ],
     "rust": [
       "The borrow checker is not being mean to you. It's being honest.",
       "Your Rust code has three .clone() calls in a hot loop. You've defeated the point.",
       "You added unsafe and now you're just writing C with extra steps and more anxiety.",
       "unwrap() is not error handling, it's an optimistic prayer.",
-      "You fought the borrow checker for two hours. The borrow checker won. It always wins."
+      "You fought the borrow checker for two hours. The borrow checker won. It always wins.",
+      "Fighting the borrow checker and losing for 3 hours straight.",
+      "Wrapping everything in Arc<Mutex<RefCell<...>>> because ownership is hard."
     ],
     "go_lang": [
       "if err != nil { log.Fatal(err) } is not a retry strategy.",
       "Your goroutine leaks. Slowly. Quietly. Like a gas leak but for memory.",
       "You're not handling the second return value. Enjoy your invisible errors.",
       "That channel is unbuffered and you're sending from the main goroutine. Deadlock incoming.",
-      "You wrote a Go service and then spent three days fighting with GOPATH. The spirit of the language weeps."
+      "You wrote a Go service and then spent three days fighting with GOPATH. The spirit of the language weeps.",
+      "Ignoring err in Go. '_ = err' is the ultimate badge of denial.",
+      "Goroutine leak: your app slowly consumes RAM until the server restarts."
     ]
   }
 }

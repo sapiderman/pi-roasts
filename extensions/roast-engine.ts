@@ -28,11 +28,20 @@ export interface RoastEngine {
   onIdleTick(): string | null;
 }
 
+function extractPath(inp: Record<string, unknown>): string | undefined {
+  for (const key of ["path", "filePath", "targetFile", "file", "file_path"]) {
+    if (typeof inp[key] === "string" && inp[key]) {
+      return inp[key] as string;
+    }
+  }
+  return undefined;
+}
+
 /**
  * Extracts signal values from the tool call input.
  * Shared between the engine and the matcher.
  */
-function extractSignals(toolName: string, input: unknown): ToolSignal {
+export function extractSignals(toolName: string, input: unknown): ToolSignal {
   if (typeof input !== "object" || input === null) {
     return { toolName };
   }
@@ -40,7 +49,7 @@ function extractSignals(toolName: string, input: unknown): ToolSignal {
   return {
     toolName,
     command: typeof inp.command === "string" ? inp.command : undefined,
-    path: typeof inp.path === "string" ? inp.path : undefined,
+    path: extractPath(inp),
     message: typeof inp.message === "string" ? inp.message : undefined,
   };
 }
