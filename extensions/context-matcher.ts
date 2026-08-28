@@ -39,7 +39,7 @@ export const MATCH_RULES: MatchRule[] = [
   { signal: "command", toolGate: "bash", pattern: /\b(npm\s+(i|install)|yarn(\s+add)?|pnpm\s+(i|add|install)|bun\s+(add|install))\b/, category: "npm_install" },
   { signal: "command", toolGate: "bash", pattern: /\bcurl\b/, category: "curl" },
   { signal: "command", toolGate: "bash", pattern: /\bchmod\b/, category: "chmod" },
-  { signal: "command", toolGate: "bash", pattern: /\bdocker-compose\b/, category: "docker_compose" },
+  { signal: "command", toolGate: "bash", pattern: /\bdocker(-|\s+)compose\b/, category: "docker_compose" },
   { signal: "command", toolGate: "bash", pattern: /\bdocker\b/, category: "docker" },
   { signal: "command", toolGate: "bash", pattern: /\bkill\b/, category: "kill" },
   { signal: "command", toolGate: "bash", pattern: /\bssh\b/, category: "ssh" },

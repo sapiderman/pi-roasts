@@ -18,6 +18,7 @@ function createTestDeps(overrides: Partial<RoastEngineDeps> = {}): RoastEngineDe
       lowPriorityTools: new Set(["read"]),
       readInsultChance: 0.3,
       failureInsultChance: 0.5,
+      failureExcludedTools: new Set(["read"]),
       unclassifiedToolChance: 0.15,
     },
     ...overrides,
@@ -109,6 +110,13 @@ describe("RoastEngine", () => {
       const result = engine.onToolResult(false);
       expect(result).toBeNull();
     });
+
+    it("returns null for excluded tools even on error", () => {
+      const rng = () => 0.0; // below 0.5 — would roast if not excluded
+      const engine = createRoastEngine(createTestDeps({ rng }));
+      expect(engine.onToolResult(true, "read")).toBeNull();
+      expect(engine.onToolResult(true, "bash")).toBe("failure insult");
+    });
   });
 
   describe("onModelSelect", () => {
@@ -127,12 +135,18 @@ describe("RoastEngine", () => {
   });
 
   describe("extractSignals", () => {
-    it("extracts path from path, filePath, targetFile, file, or file_path", () => {
+    it("extracts path from path, filePath, targetFile, file, file_path, and common aliases", () => {
       expect(extractSignals("write", { path: "a.ts" }).path).toBe("a.ts");
       expect(extractSignals("write", { filePath: "b.ts" }).path).toBe("b.ts");
       expect(extractSignals("write", { targetFile: "c.ts" }).path).toBe("c.ts");
       expect(extractSignals("write", { file: "d.ts" }).path).toBe("d.ts");
       expect(extractSignals("write", { file_path: "e.ts" }).path).toBe("e.ts");
+      expect(extractSignals("write", { filename: "f.ts" }).path).toBe("f.ts");
+      expect(extractSignals("write", { fileName: "g.ts" }).path).toBe("g.ts");
+      expect(extractSignals("write", { TargetFile: "h.ts" }).path).toBe("h.ts");
+      expect(extractSignals("write", { target_file: "i.ts" }).path).toBe("i.ts");
+      expect(extractSignals("write", { destination: "j.ts" }).path).toBe("j.ts");
+      expect(extractSignals("write", { dest: "k.ts" }).path).toBe("k.ts");
     });
   });
 });

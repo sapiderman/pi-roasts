@@ -13,8 +13,8 @@ export interface IdleSchedulerConfig {
 }
 
 export interface TimerDeps {
-  setTimeout: (fn: () => void, ms: number) => ReturnType<typeof setTimeout>;
-  clearTimeout: (id: ReturnType<typeof setTimeout>) => void;
+  setTimeout: (fn: () => void, ms: number) => any;
+  clearTimeout: (id: any) => void;
 }
 
 export interface IdleScheduler {

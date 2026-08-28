@@ -217,4 +217,25 @@ describe("Integration: extension wiring (real default export)", () => {
     // Should NOT render a roast
     expect(fake.widgets.has("pi-roast")).toBe(false);
   });
+
+  it("provides argument completions for roast-color and updates theme color", async () => {
+    const fake = createFakePi();
+    extension(fake.api as never);
+    const ctx = fake.createCtx();
+    await fake.emit("session_start", {}, ctx);
+
+    const roastColorCmd = fake.commands.get("roast-color") as any;
+    expect(roastColorCmd).toBeDefined();
+    expect(typeof roastColorCmd.getArgumentCompletions).toBe("function");
+
+    const completions = roastColorCmd.getArgumentCompletions("mut");
+    expect(completions).toEqual([{ value: "muted", label: "muted" }]);
+    expect(roastColorCmd.getArgumentCompletions("zzz")).toBeNull();
+
+    await roastColorCmd.handler("error", ctx);
+    expect(fake.notifications.some(n => /Roast color set to error/.test(n.message))).toBe(true);
+
+    await roastColorCmd.handler("invalid_color", ctx);
+    expect(fake.notifications.some(n => /Invalid color "invalid_color"/.test(n.message))).toBe(true);
+  });
 });

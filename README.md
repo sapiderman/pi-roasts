@@ -6,10 +6,10 @@ Every time you run a command, edit a file, switch models, or just sitting there 
 
 ## Features
 
-- **Curated insults** — 203 general, 59 failure-specific, and 30 contextual categories covering `rm -rf`, `sudo`, force push, `.env` files, YAML, and more
-- **Context-aware roasts** — detects what you're doing and serves a targeted insult: editing `.env`? `rm -rf`? `git push --force`? Precision strikes
-- **Model-switch roasts** — switching models with `/model` or Ctrl+P triggers a roast about your life choices (12-entry pool)
-- **Failure roasts** — when a tool fails, you get roasted harder (50% chance)
+- **Curated insults** — 250+ general, 85+ failure-specific, and 30 contextual categories covering `rm -rf`, `sudo`, force push, `.env` files, YAML, and more
+- **Context-aware roasts** — detects what you're doing and serves a targeted insult: editing `.env`? `rm -rf`? `git push --force`? `docker compose`? Precision strikes
+- **Model-switch roasts** — switching models with `/model` or Ctrl+P triggers a roast about your life choices (25+ entry pool)
+- **Failure roasts** — when a tool fails, you get roasted harder (50% chance; `read` misses are exempt — too spammy)
 - **Shuffle bag** — Fisher-Yates shuffle with draw-without-replacement and cross-cycle repeat prevention
 - **Tool-triggered roasts** — `bash`, `write`, `edit` always roast; `read` roasts 30% of the time; unclassified tools roast 15% of the time
 - **Turn-aware idle timer** — pauses during active agent turns, resumes when idle; random insults every 45–120 seconds of inactivity
@@ -111,7 +111,7 @@ The extension detects specific patterns in your tool calls and serves targeted i
 
 ## Model-Switch Roasts
 
-Switching models triggers a roast from a dedicated pool of 12:
+Switching models triggers a roast from a dedicated pool:
 
 ```text
 Switching models? Running from your problems again.

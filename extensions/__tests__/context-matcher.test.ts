@@ -1,11 +1,19 @@
 import { describe, it, expect } from "vitest";
 import { matchContext, MATCH_RULES } from "../context-matcher.js";
+import insultsData from "../insults.json" with { type: "json" };
 
 describe("ContextMatcher", () => {
   describe("MATCH_RULES", () => {
     it("covers all 30 contextual categories from insults.json", () => {
       const categories = new Set(MATCH_RULES.map(r => r.category));
       expect(categories.size).toBe(30);
+    });
+
+    it("every rule category exists in insults.json (rules ↔ data coupling)", () => {
+      const cats = new Set(Object.keys(insultsData.contextual));
+      for (const rule of MATCH_RULES) {
+        expect(cats.has(rule.category), `missing category: ${rule.category}`).toBe(true);
+      }
     });
   });
 
@@ -207,6 +215,22 @@ describe("ContextMatcher", () => {
         path: "Dockerfile",
       });
       expect(result).toBe("docker");
+    });
+
+    // Docker compose (space and hyphen)
+    it("matches docker_compose for docker-compose and docker compose", () => {
+      expect(
+        matchContext(MATCH_RULES, {
+          toolName: "bash",
+          command: "docker-compose up -d",
+        }),
+      ).toBe("docker_compose");
+      expect(
+        matchContext(MATCH_RULES, {
+          toolName: "bash",
+          command: "docker compose up",
+        }),
+      ).toBe("docker_compose");
     });
 
     // Makefile path

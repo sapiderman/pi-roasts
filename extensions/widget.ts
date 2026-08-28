@@ -12,7 +12,7 @@ export type ThemeFgColor =
   | "border" | "borderAccent" | "borderMuted";
 
 export interface WidgetPort {
-  setWidget(key: string, widget: unknown): void;
+  setWidget(key: string, widget: any, options?: any): void;
 }
 
 export interface Widget {

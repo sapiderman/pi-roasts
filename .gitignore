@@ -239,6 +239,3 @@ $RECYCLE.BIN/
 ## hardnesses
 .antigravitycli
 .pi-subagents
-
-## npm publish
-*.tgz

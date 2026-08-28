@@ -50,6 +50,7 @@ If you add a new contextual category, also add a matching rule to the `MATCH_RUL
 ## Notes
 
 - Run tests with `npm test`. Tests use vitest and cover the core modules (ShuffleBag, context matcher, roast engine, etc.).
+- Run `npm run typecheck` to verify TypeScript types.
 - If you update contextual insults, double-check the matching rules in `extensions/context-matcher.ts` and consider adding a test to `extensions/__tests__/context-matcher.test.ts`.
 - Will add multi language support.
 

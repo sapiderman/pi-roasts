@@ -8,6 +8,8 @@ export interface RoastEngineConfig {
   lowPriorityTools: Set<string>;
   readInsultChance: number;
   failureInsultChance: number;
+  /** Tools whose failures never trigger a failure roast (e.g. read retries on missing files). */
+  failureExcludedTools: Set<string>;
   unclassifiedToolChance: number;
 }
 
@@ -23,13 +25,25 @@ export interface RoastEngineDeps {
 
 export interface RoastEngine {
   onToolCall(toolName: string, input: unknown): string | null;
-  onToolResult(isError: boolean): string | null;
+  onToolResult(isError: boolean, toolName?: string): string | null;
   onModelSelect(): string | null;
   onIdleTick(): string | null;
 }
 
 function extractPath(inp: Record<string, unknown>): string | undefined {
-  for (const key of ["path", "filePath", "targetFile", "file", "file_path"]) {
+  for (const key of [
+    "path",
+    "filePath",
+    "targetFile",
+    "file",
+    "file_path",
+    "fileName",
+    "filename",
+    "target_file",
+    "TargetFile",
+    "destination",
+    "dest",
+  ]) {
     if (typeof inp[key] === "string" && inp[key]) {
       return inp[key] as string;
     }
@@ -96,8 +110,8 @@ export function createRoastEngine(deps: RoastEngineDeps): RoastEngine {
     return null;
   }
 
-  function onToolResult(isError: boolean): string | null {
-    if (isError && rng() < config.failureInsultChance) {
+  function onToolResult(isError: boolean, toolName = ""): string | null {
+    if (isError && !config.failureExcludedTools.has(toolName) && rng() < config.failureInsultChance) {
       return failureBag.next();
     }
     return null;

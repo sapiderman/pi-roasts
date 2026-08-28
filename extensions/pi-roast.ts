@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import type { ExtensionAPI, ExtensionUIContext } from "@earendil-works/pi-coding-agent";
 import insultsData from "./insults.json" with { type: "json" };
 import { ShuffleBag } from "./shuffle-bag.js";
 import { MATCH_RULES } from "./context-matcher.js";
@@ -21,8 +21,8 @@ function validateInsultsData(data: unknown): InsultsData {
   const d = data as Record<string, unknown>;
 
   for (const key of ["general", "failures", "model"] as const) {
-    if (!Array.isArray(d[key])) {
-      throw new Error(`insults.json: expected "${key}" to be an array`);
+    if (!Array.isArray(d[key]) || d[key].length === 0) {
+      throw new Error(`insults.json: expected "${key}" to be a non-empty array`);
     }
     for (const item of d[key] as unknown[]) {
       if (typeof item !== "string") throw new Error(`insults.json: "${key}" must contain strings`);
@@ -34,7 +34,7 @@ function validateInsultsData(data: unknown): InsultsData {
   }
 
   for (const [cat, val] of Object.entries(d.contextual as Record<string, unknown>)) {
-    if (!Array.isArray(val)) throw new Error(`insults.json: contextual.${cat} must be an array`);
+    if (!Array.isArray(val) || val.length === 0) throw new Error(`insults.json: contextual.${cat} must be a non-empty array`);
     for (const item of val) {
       if (typeof item !== "string") throw new Error(`insults.json: contextual.${cat} must contain strings`);
     }
@@ -60,6 +60,7 @@ interface ToolCallEvent {
 }
 
 interface ToolResultEvent {
+  toolName?: string;
   isError?: boolean;
   result?: {
     isError?: boolean;
@@ -90,6 +91,7 @@ export default function (pi: ExtensionAPI) {
       lowPriorityTools: new Set(["read"]),
       readInsultChance: 0.3,
       failureInsultChance: 0.5,
+      failureExcludedTools: new Set(["read"]),
       unclassifiedToolChance: 0.15,
     },
   });
@@ -107,7 +109,7 @@ export default function (pi: ExtensionAPI) {
   });
 
   // Mutable state: narrow holders for current UI + enabled flag + color
-  let currentUi: { setWidget: (key: string, widget: unknown) => void } | null = null;
+  let currentUi: ExtensionUIContext | null = null;
   let enabled = true;
   let color: ThemeFgColor = "accent";
 
@@ -164,6 +166,13 @@ export default function (pi: ExtensionAPI) {
 
   pi.registerCommand("roast-color", {
     description: `Set roast text color. Options: ${THEME_FG_COLORS.join(", ")}`,
+    getArgumentCompletions: (argumentPrefix: string) => {
+      const prefix = argumentPrefix.trim().toLowerCase();
+      const items = THEME_FG_COLORS
+        .filter((c) => c.toLowerCase().startsWith(prefix))
+        .map((c) => ({ value: c, label: c }));
+      return items.length > 0 ? items : null;
+    },
     handler: async (args, ctx) => {
       const newColor = args.trim().toLowerCase();
       if (!THEME_FG_COLORS.includes(newColor as ThemeFgColor)) {
@@ -221,7 +230,7 @@ export default function (pi: ExtensionAPI) {
     currentUi = ctx.ui;
     if (!enabled) return;
     const isError = Boolean(event.isError ?? event.result?.isError);
-    const insult = engine.onToolResult(isError);
+    const insult = engine.onToolResult(isError, event.toolName);
     if (insult) roast(insult);
   });
 

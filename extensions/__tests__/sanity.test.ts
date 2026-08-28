@@ -33,4 +33,9 @@ describe("ShuffleBag", () => {
     expect(bag.next()).toBe("only");
     expect(bag.next()).toBe("only");
   });
+
+  it("throws an error when next() is called on an empty pool", () => {
+    const bag = new ShuffleBag([]);
+    expect(() => bag.next()).toThrow("ShuffleBag: pool cannot be empty");
+  });
 });

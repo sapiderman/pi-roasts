@@ -22,6 +22,9 @@ export class ShuffleBag<T> {
   }
 
   next(): T {
+    if (this.pool.length === 0) {
+      throw new Error("ShuffleBag: pool cannot be empty");
+    }
     if (this.remaining.length === 0) {
       this.remaining = [...this.pool];
       this.shuffle();
